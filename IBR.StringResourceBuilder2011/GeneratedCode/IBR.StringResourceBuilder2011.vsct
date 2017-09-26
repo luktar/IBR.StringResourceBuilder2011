@@ -41,8 +41,8 @@
         <Icon guid="translator.bmpGuid" id="translator.bmpId" />
         <Strings>
         <CommandName>cmdidStringResourceBuilder</CommandName>
-        <ButtonText>String Resource Builder</ButtonText>
-        <MenuText>String Resource Builder</MenuText>
+        <ButtonText>String Resource Builder (RA)</ButtonText>
+        <MenuText>String Resource Builder (RA)</MenuText>
         <ToolTipText>Build resource from string literals</ToolTipText>
         </Strings>
       </Button>

@@ -145,7 +145,7 @@ namespace IBR.StringResourceBuilder2011.Modules
       {
         Debug.Print("> BrowseForStrings() - cancelled (already running)");
         return;
-      } //if
+      } 
 
       m_IsBrowsing = true;
 
@@ -208,8 +208,8 @@ namespace IBR.StringResourceBuilder2011.Modules
         else
         {
           SelectNearestGridRow();
-        } //else
-      } //if
+        } 
+      } 
 
       if ((m_Window != null) && (m_Window != m_Dte2.ActiveWindow))
         m_Window.Activate();
@@ -260,14 +260,6 @@ namespace IBR.StringResourceBuilder2011.Modules
         if (!IsLanguageSupported(m_Dte2.ActiveDocument))
           return (false);
 
-        //foreach (EnvDTE.Window w in m_Dte2.ActiveDocument.Windows)
-        //{
-        //  if (w.Caption.EndsWith("[Design]", StringComparison.OrdinalIgnoreCase))
-        //    continue;
-
-        //  m_Window = w;
-        //  break;
-        //} //foreach
         if ((m_Dte2.ActiveDocument.ActiveWindow != null)
             && !m_Dte2.ActiveDocument.ActiveWindow.Caption.EndsWith("[Design]", StringComparison.OrdinalIgnoreCase))
           m_Window = m_Dte2.ActiveDocument.ActiveWindow;
@@ -282,7 +274,7 @@ namespace IBR.StringResourceBuilder2011.Modules
 
         if (m_Window.Caption.EndsWith("[Design]", StringComparison.OrdinalIgnoreCase))
           return (false);
-      } //else
+      } 
 
       m_IsCSharp         = (m_Window.Document.Language == "CSharp");
       m_ProjectExtension = System.IO.Path.GetExtension(m_Window.Project.FullName).Substring(1);
@@ -323,7 +315,7 @@ namespace IBR.StringResourceBuilder2011.Modules
       {
         resourceFileName = m_ProjectExtension.StartsWith("cs", StringComparison.OrdinalIgnoreCase) ? "Properties" : "My Project";
         resourceFileDir  = System.IO.Path.GetDirectoryName(m_Window.ProjectItem.ContainingProject.FullName);
-      } //else
+      } 
 
       //get the projects project-items collection
       ProjectItems prjItems = m_Window.Project.ProjectItems;
@@ -336,7 +328,7 @@ namespace IBR.StringResourceBuilder2011.Modules
           prjItems = ((ProjectItem)m_Window.ProjectItem.Collection.Parent).ProjectItems;
         }
         catch { }
-      } //if
+      } 
 
       try
       {
@@ -353,7 +345,7 @@ namespace IBR.StringResourceBuilder2011.Modules
           prjItems            = resourceFilePrjItem.ProjectItems;
           resourceFilePrjItem = null;
           resourceFileDir     = System.IO.Path.Combine(resourceFileDir, resourceFileName); //append "Properties"/"My Project" because it exists
-        } //if
+        } 
 
         if (prjItems == null)
           return (null); //something went terribly wrong that never should have been possible
@@ -369,7 +361,7 @@ namespace IBR.StringResourceBuilder2011.Modules
           resourceFilePrjItem = prjItems.Item(resourceFileName);
         }
         catch { }
-      } //if
+      } 
 
       if (resourceFilePrjItem == null)
       {
@@ -392,8 +384,8 @@ namespace IBR.StringResourceBuilder2011.Modules
           {
             TryToSilentlyDeleteIfExistsEvenIfReadOnly(resourceFile);
             TryToSilentlyDeleteIfExistsEvenIfReadOnly(designerFile);
-          } //else
-        } //if
+          } 
+        } 
         #endregion
 
         try
@@ -410,7 +402,7 @@ namespace IBR.StringResourceBuilder2011.Modules
           Trace.WriteLine($"### OpenOrCreateResourceFile() - {ex.ToString()}");
           return (null);
         }
-      } //if
+      } 
 
       if (resourceFilePrjItem == null)
         return (null);
@@ -442,9 +434,9 @@ namespace IBR.StringResourceBuilder2011.Modules
             {
               nameSpace = element.FullName;
               break;
-            } //if
-          } //foreach
-        } //foreach
+            } 
+          } 
+        }
         #endregion
 
         //close the ResX file to modify it (force a checkout)
@@ -487,7 +479,7 @@ namespace IBR.StringResourceBuilder2011.Modules
             //standard global resource file
             aliasName    = string.Concat("Glbl", aliasName);
             resourceCall = string.Concat("Glbl", resourceCall);
-          } //if
+          } 
 
           int oldRow = m_TextDocument.Selection.ActivePoint.Line;
 
@@ -502,13 +494,13 @@ namespace IBR.StringResourceBuilder2011.Modules
             int lastDotPos = nameSpace.LastIndexOf('.');
             string resxNameSpace = (lastDotPos >= 0) ? string.Concat(nameSpace.Substring(lastDotPos + 1), ".") : string.Empty;
             resourceCall = string.Concat(resxNameSpace, className, ".", name);
-          } //else
+          } 
 
           //insert the resource call, replacing the selected string literal
           m_TextDocument.Selection.Insert(resourceCall, (int)vsInsertFlags.vsInsertFlagsContainNewText);
 
           UpdateTableAndSelectNext(resourceCall.Length - replaceLength, m_TextDocument.Selection.ActivePoint.Line - oldRow);
-        } //if
+        } 
       }
       catch (Exception ex)
       {
@@ -527,7 +519,7 @@ namespace IBR.StringResourceBuilder2011.Modules
       {
         resourceAlias1 = $"Imports {aliasName} = ";
         resourceAlias2 = $"{nameSpace}.{className}";
-      } //if
+      } 
 
       CodeElements elements   = m_TextDocument.Parent.ProjectItem.FileCodeModel.CodeElements;
       CodeElement lastElement = null;
@@ -547,7 +539,7 @@ namespace IBR.StringResourceBuilder2011.Modules
           //using/import statement was available so find next NON using/import statement
           if (element.Kind != vsCMElement.vsCMElementImportStmt)
             break;
-        } //else
+        } 
 
         if (element.Kind == vsCMElement.vsCMElementOptionStmt)
           //save last option statement
@@ -561,8 +553,8 @@ namespace IBR.StringResourceBuilder2011.Modules
           CodeImport importElement = element as CodeImport;
           if ((importElement.Alias != null) && importElement.Alias.Equals(aliasName) && importElement.Namespace.Equals(resourceAlias2))
             return;
-        } //if
-      } //foreach
+        } 
+      }
       #endregion
 
       EditPoint insertPoint = null;
@@ -578,7 +570,7 @@ namespace IBR.StringResourceBuilder2011.Modules
 
         if (lastElement.Kind == vsCMElement.vsCMElementOptionStmt)
           insertPoint.Insert(Environment.NewLine);
-      } //else
+      } 
 
       if (m_IsCSharp)
         resourceAlias2 += ";";
@@ -617,7 +609,7 @@ namespace IBR.StringResourceBuilder2011.Modules
             return (false);
           else
             return (true);
-        } //if
+        } 
 
         if (m_IsCSharp)
         {
@@ -635,7 +627,7 @@ namespace IBR.StringResourceBuilder2011.Modules
 
           if (value.Contains(@"\\"))
             value = value.Replace(@"\\", @"\");
-        } //if
+        } 
 
         if (value.Contains("\\\""))
           value = value.Replace("\\\"", "\"");
@@ -664,7 +656,7 @@ namespace IBR.StringResourceBuilder2011.Modules
             valueElement = xmlDoc.CreateElement("comment");
             valueElement.InnerText = comment;
             dataElement.AppendChild(valueElement);
-          } //if
+          } 
         }
         xmlDoc.DocumentElement.AppendChild(dataElement);
 
@@ -775,9 +767,9 @@ namespace IBR.StringResourceBuilder2011.Modules
               lineNo = stringResource.Location.X;
               Debug.Print("> Found at ({0}, {1}): '{2}'", lineNo, stringResource.Location.Y, stringResource.Text);
               break;
-            } //if
-          } //foreach
-        } //else
+            } 
+          } 
+        } 
 
         #endregion
       }
@@ -801,10 +793,10 @@ namespace IBR.StringResourceBuilder2011.Modules
           rowNo  = m_StringResources.IndexOf(stringResourceBehind);
           lineNo = stringResourceBehind.Location.X;
           Debug.Print("> Found at ({0}, {1}): '{2}'", lineNo, stringResourceBehind.Location.Y, stringResourceBehind.Text);
-        } //else
+        } 
 
         #endregion
-      } //else
+      } 
 
       if (rowNo >= 0)
       {
@@ -812,7 +804,7 @@ namespace IBR.StringResourceBuilder2011.Modules
 
         if (lineNo == curLine)
           SelectStringInTextDocument();
-      } //if
+      } 
     }
 
     /// <summary>
@@ -829,8 +821,7 @@ namespace IBR.StringResourceBuilder2011.Modules
 
         int replacedLocationX = m_SelectedStringResource.Location.X,
             replacedLocationY = m_SelectedStringResource.Location.Y,
-            startGridRowIndex = (deltaLine != 0) ? 0 : m_SelectedGridRowIndex + 1; //touch all when alias has been inserted
-                                                                                   //else only the following entries on the same line
+            startGridRowIndex = (deltaLine != 0) ? 0 : m_SelectedGridRowIndex + 1; 
 
         for (int gridRowIndex = startGridRowIndex; gridRowIndex < m_StringResources.Count; ++gridRowIndex)
         {
@@ -861,7 +852,7 @@ namespace IBR.StringResourceBuilder2011.Modules
           }
           else
             break; //nothing left to update
-        } //for
+        } 
 
 #if never //[12-10-03 DR]: Indexing no longer in use
         //[12-10-03 DR]: search for resource names with selected name plus index ("_#")
@@ -891,14 +882,14 @@ namespace IBR.StringResourceBuilder2011.Modules
                 item.Name = item.Name.Substring(0, nameLength);         //remove old index number
                 item.Name = string.Concat(item.Name, index.ToString()); //append new index number
                 ++index;
-              } //else
-            } //if
-          } //foreach
-        } //if
+              } 
+            } 
+          } each
+        } 
 #endif
 
         #endregion
-      } //if
+      } 
 
       #region remove entry and goto next entry
 
@@ -938,7 +929,7 @@ namespace IBR.StringResourceBuilder2011.Modules
 
         try { System.IO.File.Delete(file); }
         catch { }
-      } //if
+      } 
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -964,7 +955,7 @@ namespace IBR.StringResourceBuilder2011.Modules
         foreach (CodeElement melt in mems)
         {
           CollapseElement(melt);
-        } //foreach
+        }
       }
       else if (element.Kind == vsCMElement.vsCMElementNamespace)
       {
@@ -979,9 +970,9 @@ namespace IBR.StringResourceBuilder2011.Modules
           foreach (CodeElement melt in mems_ns)
           {
             CollapseElement(melt);
-          } //foreach
+          }
           System.Diagnostics.Debug.Print("end of cns.members");
-        } //if
+        } 
       }
       else if (element.Kind == vsCMElement.vsCMElementFunction)
       {
@@ -996,9 +987,9 @@ namespace IBR.StringResourceBuilder2011.Modules
           foreach (CodeElement melt in mems_f)
           {
             CollapseElement(melt);
-          } //foreach
+          } 
           System.Diagnostics.Debug.Print("end of cf.members");
-        } //if
+        } 
       }
       else if (element.Kind == vsCMElement.vsCMElementProperty)
       {
@@ -1013,9 +1004,9 @@ namespace IBR.StringResourceBuilder2011.Modules
           foreach (CodeElement melt in mems_p)
           {
             CollapseElement(melt);
-          } //foreach
+          } 
           System.Diagnostics.Debug.Print("end of cp.members");
-        } //if
+        } 
       }
       else if (element.Kind == vsCMElement.vsCMElementVariable)
       {
@@ -1030,9 +1021,9 @@ namespace IBR.StringResourceBuilder2011.Modules
           foreach (CodeElement melt in mems_v)
           {
             CollapseElement(melt);
-          } //foreach
+          } 
           System.Diagnostics.Debug.Print("end of cv.members");
-        } //if
+        } 
       }
       else
         System.Diagnostics.Debug.Print("kind = {0} in line {1} to {2}", element.Kind, element.StartPoint.Line, element.EndPoint.Line);
@@ -1090,36 +1081,9 @@ namespace IBR.StringResourceBuilder2011.Modules
         m_TextDocument.Selection.CharRight(true, 1);
         if (m_TextDocument.Selection.Text[0] != '@')
           m_TextDocument.Selection.MoveToLineAndOffset(location.X, location.Y, false);
-        //else
+        
         //  isAtString = true;
-      } //if
-
-      //from this point 'text' won't be valid anymore (changed for length)
-      //if (!isAtString)
-      //{
-      //  if (text.Contains(@"\"))
-      //    text = text.Replace(@"\", "#");
-      //  //if (text.Contains(@"\\"))
-      //  //  text = text.Replace(@"\\", "##");
-      //  //if (text.Contains(@"\r"))
-      //  //  text = text.Replace(@"\r", "##");
-      //  //if (text.Contains(@"\n"))
-      //  //  text = text.Replace(@"\n", "##");
-      //  //if (text.Contains(@"\t"))
-      //  //  text = text.Replace(@"\t", "##");
-      //  //if (text.Contains(@"\0"))
-      //  //  text = text.Replace(@"\0", "##");
-      //  //if (text.Contains("\""))
-      //  //  text = text.Replace("\"", "##");
-      //}
-      ////else
-      ////{
-      ////  if (text.Contains("\""))
-      ////    text = text.Replace("\"", "##");
-      ////  if (text.Contains(@"\\"))
-      ////    text = text.Replace(@"\\", "##");
-      ////} //else
-
+      } 
       m_TextDocument.Selection.MoveToLineAndOffset(location.X, location.Y + text.Length + 2, true);
 
       m_SelectedStringResource = this.GetSelectedItem();

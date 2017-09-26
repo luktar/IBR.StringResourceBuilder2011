@@ -156,7 +156,7 @@ namespace IBR.StringResourceBuilder2011
         m_Dte2.Events.WindowEvents.WindowActivated += WindowEvents_WindowActivated;
         m_Dte2.Events.WindowEvents.WindowClosing   -= WindowEvents_WindowClosing;
         m_Dte2.Events.WindowEvents.WindowClosing   += WindowEvents_WindowClosing;
-      } //else
+      } 
     }
 
     private void dataGrid1_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
@@ -213,7 +213,7 @@ namespace IBR.StringResourceBuilder2011
           WindowEvents_WindowClosing(m_StringResourceBuilder.Window);
 
         return;
-      } //if
+      } 
 
       Trace.WriteLine("WindowEvents_WindowActivated()");
 
@@ -221,14 +221,7 @@ namespace IBR.StringResourceBuilder2011
       {
         m_TextEditorEvents.LineChanged -= m_TextEditorEvents_LineChanged;
         m_TextEditorEvents = null;
-      } //if
-
-      //if (m_TextDocumentKeyPressEvents != null)
-      //{
-      //  m_TextDocumentKeyPressEvents.AfterKeyPress -= m_TextDocumentKeyPressEvents_AfterKeyPress;
-      //  m_TextDocumentKeyPressEvents.AfterKeyPress += m_TextDocumentKeyPressEvents_AfterKeyPress;
-      //  m_TextDocumentKeyPressEvents = null;
-      //} //if
+      } 
 
       EnvDTE.Window window = m_Dte2.ActiveDocument.ActiveWindow;
 
@@ -264,11 +257,9 @@ namespace IBR.StringResourceBuilder2011
             m_FocusedTextDocumentWindowHash                   = window.GetHashCode();
             m_StringResourceBuilder.FocusedTextDocumentWindow = window;
             this.Dispatcher.BeginInvoke(new Action(m_StringResourceBuilder.DoBrowse));
-          } //if
-        } //if
+          } 
+        } 
       }
-      //else if (m_StringResourceBuilder.Window != null)
-      //  WindowEvents_WindowClosing(m_StringResourceBuilder.Window);
     }
 
     private void WindowEvents_WindowClosing(EnvDTE.Window Window)
@@ -292,11 +283,6 @@ namespace IBR.StringResourceBuilder2011
                                                        startPoint.Line, startPoint.LineCharOffset,
                                                        endPoint.Line, endPoint.LineCharOffset,
                                                        textChangedHint.ToString()));
-
-      //if (((textChangedHint & vsTextChanged.vsTextChangedNewline) == 0) &&
-      //    ((textChangedHint & vsTextChanged.vsTextChangedMultiLine) == 0) &&
-      //    (textChangedHint != 0))
-      //  return;
 
       if (m_IsVisible)
         this.Dispatcher./*Begin*/Invoke(new Action<TextPoint, TextPoint>(m_StringResourceBuilder.DoBrowse), startPoint, endPoint); //[12-07-21 DR]: synchronously due to multiple events for one edit
@@ -341,7 +327,7 @@ namespace IBR.StringResourceBuilder2011
       {
         m_TextEditorEvents.LineChanged -= m_TextEditorEvents_LineChanged;
         m_TextEditorEvents = null;
-      } //if
+      } 
 
       ClearGrid();
 
@@ -377,7 +363,7 @@ namespace IBR.StringResourceBuilder2011
         {
           m_Progress += m_ProgressStep;
           this.progressBar1.Refresh();
-        } //if
+        } 
       }
       catch
       {
@@ -397,7 +383,7 @@ namespace IBR.StringResourceBuilder2011
         {
           m_Progress += m_ProgressStep;
           //this.progressBar1.Refresh();
-        } //if
+        } 
       }
       catch
       {
@@ -420,7 +406,7 @@ namespace IBR.StringResourceBuilder2011
           m_LastCurrentColumn = this.dataGrid1.SelectedCells[0].Column.DisplayIndex;
         else
           m_LastCurrentColumn = 1;
-      } //if
+      } 
 
       this.dataGrid1.UnselectAllCells();
       this.dataGrid1.ItemsSource = null;
@@ -654,7 +640,7 @@ namespace IBR.StringResourceBuilder2011
       {
         m_StringResourceBuilder.SaveSettings();
         DoRescan();
-      } //if
+      } 
 
 #if xDEBUG
       OutlineCode();

@@ -222,11 +222,11 @@ namespace IBR.StringResourceBuilder2011.GUI
           this.lstList.Items.Add(action.Text);
           this.lstList.SelectedIndex = this.lstList.Items.IndexOf(action.Text);
           #endregion
-        } //else
+        } 
 
         destinationBuffer.Add(action);
         sourceBuffer.RemoveAt(index);
-      } //if
+      } 
 
       this.btnUndo.IsEnabled = (m_UndoBuffer.Count > 0);
       this.btnRedo.IsEnabled = (m_RedoBuffer.Count > 0);

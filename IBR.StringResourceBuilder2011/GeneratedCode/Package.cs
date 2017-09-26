@@ -104,7 +104,7 @@ namespace IBR.StringResourceBuilder2011
         commandId = new CommandID(GuidList.guidIBRStringResourceBuilder2011CmdSet, (int)PkgCmdIDList.Settings);
         menuItem = new OleMenuCommand(SettingsExecuteHandler, SettingsChangeHandler, SettingsQueryStatusHandler, commandId);
         mcs.AddCommand(menuItem);
-      } //if
+      } 
     }
 
     #endregion

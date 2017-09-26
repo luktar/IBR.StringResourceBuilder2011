@@ -91,7 +91,7 @@ namespace IBR.StringResourceBuilder2011
               break;
           } //switch
           #endregion
-        } //if
+        } 
 
         foreach (IdentityReference group in groups)
         {
@@ -112,9 +112,9 @@ namespace IBR.StringResourceBuilder2011
                 break;
             } //switch
             #endregion
-          } //if
-        } //foreach
-      } //foreach
+          } 
+        }
+      }
 
       allowedRights &= ~deniedRights;
 

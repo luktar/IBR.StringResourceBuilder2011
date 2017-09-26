@@ -24,12 +24,6 @@ namespace IBR.StringResourceBuilder2011
   {
     #region Constructor
 
-    static IBRStringResourceBuilder2011Package()
-    {
-      //if (m_Dte == null)
-      //  m_Dte = (DTE)GetGlobalService(typeof(DTE));
-    }
-
     //public IBRStringResourceBuilder2011Package()
     //  : base()
     //{
@@ -57,7 +51,7 @@ namespace IBR.StringResourceBuilder2011
         m_Window = FindToolWindow(typeof(SRBToolWindow), 0, false) as SRBToolWindow;
         if (m_Window != null)
           m_Control = m_Window.Content as SRBControl;
-      } //if
+      } 
     }
 
     protected override void StringResourceBuilderChangeHandler(object sender, EventArgs e)
