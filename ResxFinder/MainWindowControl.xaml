@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="ResxFinder.MainWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Background="{DynamicResource VsBrush.Window}"
+             Foreground="{DynamicResource VsBrush.WindowText}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="MyToolWindow">
+    <Grid>
+        <DockPanel LastChildFill="True" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <Button DockPanel.Dock="Top" Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
+            <Button DockPanel.Dock="Top" Name="button" Content="Button" Click="button_Click"/>
+            <TextBox DockPanel.Dock="Top" Name="textBox" 
+                     TextWrapping="Wrap" Text="TextBox" Width="Auto" Height="Auto"/>
+        </DockPanel>
+    </Grid>
+</UserControl>
