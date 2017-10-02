@@ -10,10 +10,15 @@
              Name="MyToolWindow">
     <Grid>
         <DockPanel LastChildFill="True" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            <Button DockPanel.Dock="Top" Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
-            <Button DockPanel.Dock="Top" Name="button" Content="Button" Click="button_Click"/>
-            <TextBox DockPanel.Dock="Top" Name="textBox" 
-                     TextWrapping="Wrap" Text="TextBox" Width="Auto" Height="Auto"/>
+            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
+>
+                <Button DockPanel.Dock="Left" Content="Properties" Click="button1_Click" Name="button1"/>
+                <Button DockPanel.Dock="Right" Name="button" Content="Run!" Click="button_Click"/>
+
+            </DockPanel>            
+            <TextBox DockPanel.Dock="Top" Name="textBox" Background="White"
+                     TextWrapping="Wrap" Text="Press 'Run' button." Width="Auto" Height="Auto"
+                     HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
         </DockPanel>
     </Grid>
 </UserControl>

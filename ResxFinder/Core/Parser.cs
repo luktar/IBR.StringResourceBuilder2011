@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Text;
 using EnvDTE;
 using EnvDTE80;
+using NLog;
 
 namespace ResxFinder.Core
 {
     public class Parser
     {
+        private const string FULL_PATH = "FullPath";
+
+        private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
         private DTE2 dte;   
         private Settings m_Settings;
         private bool isCsharp;
         private ProjectItem projectItem;
+
+        public string FileName { get; private set; }
 
         public List<StringResource> StringResources { get; private set; } = new List<StringResource>();
 
@@ -20,77 +26,90 @@ namespace ResxFinder.Core
                             DTE2 dte)
         {
             this.projectItem = projectItem;
+            isCsharp = true;
+            FileName = projectItem.Properties.Item(FULL_PATH).Value.ToString();
             this.dte = dte;
             m_Settings = settings;
         }
 
-        public void Start(TextPoint startPoint,
+        public bool Start(TextPoint startPoint,
                                      TextPoint endPoint,
                                      int lastDocumentLength)
         {
-
-            List<StringResource> stringResources = new List<StringResource>();
-
-            bool isFullDocument = startPoint.AtStartOfDocument && endPoint.AtEndOfDocument,
-                 isTextWithStringLiteral = true;
-            int startLine = startPoint.Line,
-                startCol = startPoint.LineCharOffset,
-                endLine = endPoint.Line,
-                endCol = endPoint.LineCharOffset,
-                documentLength = endPoint.Parent.EndPoint.Line,
-                insertIndex = 0;
-
-            if (isFullDocument)
-                StringResources.Clear();
-            else
+            try
             {
-                //determine whether the text between startLine and endLine (including) contains double quotes
-                EditPoint editPoint = startPoint.CreateEditPoint() as EditPoint2;
-                if (!startPoint.AtStartOfLine)
-                    editPoint.StartOfLine();
-                isTextWithStringLiteral = editPoint.GetLines(startLine, endLine + 1).Contains("\"");
+                logger.Debug("Start - parsing document: " + FileName);
 
-                //move trailing locations behind changed lines if needed and
-                //remove string resources on changed lines
-                int lineOffset = documentLength - lastDocumentLength;
+                List<StringResource> stringResources = new List<StringResource>();
 
-                for (int i = StringResources.Count - 1; i >= 0; --i)
-                {
-                    StringResource stringResource = StringResources[i];
-                    int lineNo = stringResource.Location.X;
-
-                    if (lineNo + lineOffset > endLine)
-                    {
-                        if (lineOffset != 0)
-                        {
-                            stringResource.Offset(lineOffset, 0); //move
-                        }
-                    }
-                    else if (lineNo >= startLine)
-                    {
-                        StringResources.RemoveAt(i); //remove changed line
-                    }
-                    else if (insertIndex == 0)
-                    {
-                        insertIndex = i + 1;
-                    }
-                }
-            }
-
-            if (isTextWithStringLiteral)
-            {
-                CodeElements elements = projectItem.FileCodeModel.CodeElements;
-                isCsharp = projectItem.Properties.Item("FullPath").Value.ToString().EndsWith(".cs");
-
-                foreach (CodeElement element in elements)
-                {
-                    ParseForStrings(element, stringResources, isCsharp, m_Settings, startLine, endLine);
-                }
+                bool isFullDocument = startPoint.AtStartOfDocument && endPoint.AtEndOfDocument,
+                     isTextWithStringLiteral = true;
+                int startLine = startPoint.Line,
+                    startCol = startPoint.LineCharOffset,
+                    endLine = endPoint.Line,
+                    endCol = endPoint.LineCharOffset,
+                    documentLength = endPoint.Parent.EndPoint.Line,
+                    insertIndex = 0;
 
                 if (isFullDocument)
-                    StringResources.AddRange(stringResources);
-                else if (stringResources.Count > 0)
-                    StringResources.InsertRange(insertIndex, stringResources);
+                    StringResources.Clear();
+                else
+                {
+                    //determine whether the text between startLine and endLine (including) contains double quotes
+                    EditPoint editPoint = startPoint.CreateEditPoint() as EditPoint2;
+                    if (!startPoint.AtStartOfLine)
+                        editPoint.StartOfLine();
+                    isTextWithStringLiteral = editPoint.GetLines(startLine, endLine + 1).Contains("\"");
+
+                    //move trailing locations behind changed lines if needed and
+                    //remove string resources on changed lines
+                    int lineOffset = documentLength - lastDocumentLength;
+
+                    for (int i = StringResources.Count - 1; i >= 0; --i)
+                    {
+                        StringResource stringResource = StringResources[i];
+                        int lineNo = stringResource.Location.X;
+
+                        if (lineNo + lineOffset > endLine)
+                        {
+                            if (lineOffset != 0)
+                            {
+                                stringResource.Offset(lineOffset, 0); //move
+                            }
+                        }
+                        else if (lineNo >= startLine)
+                        {
+                            StringResources.RemoveAt(i); //remove changed line
+                        }
+                        else if (insertIndex == 0)
+                        {
+                            insertIndex = i + 1;
+                        }
+                    }
+                }
+
+                if (isTextWithStringLiteral)
+                {
+                    CodeElements elements = projectItem.FileCodeModel.CodeElements;
+
+                    foreach (CodeElement element in elements)
+                    {
+                        ParseForStrings(element, stringResources, isCsharp, m_Settings, startLine, endLine);
+                    }
+
+                    if (isFullDocument)
+                        StringResources.AddRange(stringResources);
+                    else if (stringResources.Count > 0)
+                        StringResources.InsertRange(insertIndex, stringResources);
+                }
+
+                logger.Debug("End - parsing document: " + FileName);
+
+                return true;
+            } catch(Exception e)
+            {
+                logger.Warn(e, "An error occurred while parsing file: " + FileName);
+                return false;
             }
         }
 
