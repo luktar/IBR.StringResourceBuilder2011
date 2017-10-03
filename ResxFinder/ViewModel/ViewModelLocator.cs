@@ -46,13 +46,24 @@ namespace ResxFinder.ViewModel
             SimpleIoc.Default.Register<MainWindowControlViewModel>();
         }
 
+        /// <summary>
+        /// Value should exists in devenv.exe.config
+        /// </summary>
+        /// <returns></returns>
         private bool IsTestMode()
         {
             try
             {
                 string isTestModeValue = ConfigurationManager.AppSettings[IS_TEST_MODE];
-                if (string.IsNullOrEmpty(isTestModeValue)) return false;
-                return bool.Parse(isTestModeValue);
+                if (string.IsNullOrEmpty(isTestModeValue))
+                {
+                    logger.Info($"{IS_TEST_MODE}: {false.ToString()}");
+                    return false;
+                }
+                bool result = bool.Parse(isTestModeValue);
+                logger.Info($"{IS_TEST_MODE}: {result.ToString()}");
+
+                return result;
             } catch(Exception e)
             {
                 logger.Warn(e, "Problem with reading configuration value: " + IS_TEST_MODE);
