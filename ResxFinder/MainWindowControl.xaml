@@ -12,12 +12,12 @@
         <DockPanel LastChildFill="True" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
 >
-                <Button DockPanel.Dock="Left" Content="Properties" Click="button1_Click" Name="button1"/>
-                <Button DockPanel.Dock="Right" Name="button" Content="Run!" Click="button_Click"/>
+                <Button DockPanel.Dock="Left" Content="Properties" Command="{Binding PropertiesCommand}"/>
+                <Button DockPanel.Dock="Right" Name="button" Content="Run!" Command="{Binding RunCommand}"/>
 
             </DockPanel>            
-            <TextBox DockPanel.Dock="Top" Name="textBox" Background="White"
-                     TextWrapping="Wrap" Text="Press 'Run' button." Width="Auto" Height="Auto"
+            <TextBox DockPanel.Dock="Top" Background="White"
+                     TextWrapping="Wrap" Text="{Binding Text}" Width="Auto" Height="Auto"
                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
         </DockPanel>
     </Grid>

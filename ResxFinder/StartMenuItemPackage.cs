@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using EnvDTE80;
 using EnvDTE;
+using ResxFinder.ViewModel;
 
 namespace ResxFinder
 {
@@ -66,6 +67,7 @@ namespace ResxFinder
         protected override void Initialize()
         {
             ApplicationObject = GetService(typeof(DTE)) as DTE2;
+
 
             StartMenuItem.Initialize(this);
             base.Initialize();

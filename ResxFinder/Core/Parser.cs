@@ -4,10 +4,11 @@ using System.Text;
 using EnvDTE;
 using EnvDTE80;
 using NLog;
+using ResxFinder.Interfaces;
 
 namespace ResxFinder.Core
 {
-    public class Parser
+    public class Parser : IParser
     {
         private const string FULL_PATH = "FullPath";
 
