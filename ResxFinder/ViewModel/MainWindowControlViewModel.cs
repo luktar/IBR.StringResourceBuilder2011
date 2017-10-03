@@ -16,7 +16,6 @@ namespace ResxFinder.ViewModel
 {
     public class MainWindowControlViewModel : ViewModelBase
     {
-
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
         private string text;
@@ -50,14 +49,10 @@ namespace ResxFinder.ViewModel
             ISolutionProjectsHelper solutionProjectHelper = 
                 ViewModelLocator.Instance.GetInstance<ISolutionProjectsHelper>();
 
-            foreach (Project project in solutionProjectHelper.GetProjects())
-            {
+            ParserManager parserManager = new ParserManager();
+            parserManager.Start(solutionProjectHelper.GetProjects());
 
-                AnalyzeProjectItems(project.ProjectItems);
-
-            }
-
-            WriteReport();
+            WriteReport(Parsers);
         }
 
         private void PropertiesPressed()
@@ -69,11 +64,11 @@ namespace ResxFinder.ViewModel
             }
         }
 
-        private void WriteReport()
+        private void WriteReport(List<Parser> parsers)
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (Parser parser in Parsers)
+            foreach (Parser parser in parsers)
             {
                 if (parser.StringResources.Count == 0) continue;
 
@@ -92,53 +87,6 @@ namespace ResxFinder.ViewModel
             Text = sb.ToString();
         }
 
-        private void AnalyzeProjectItems(ProjectItems projectItems)
-        {
-            if (projectItems == null) return;
-
-            foreach (ProjectItem projectItem in projectItems)
-            {
-                if (projectItem.Kind.Equals(VSConstants.ItemTypeGuid.PhysicalFolder_string))
-                {
-                    AnalyzeProjectItems(projectItem.ProjectItems);
-                    continue;
-                }
-
-                AnalyzeFile(projectItem);
-            }
-        }
-
-        private void AnalyzeFile(ProjectItem projectItem)
-        {
-            string csFilePath = String.Empty;
-            try
-            {
-                csFilePath = projectItem.Properties.Item("FullPath").Value.ToString();
-                if (csFilePath.EndsWith(".cs"))
-                {
-
-                    if (!projectItem.IsOpen)
-                        projectItem.Open();
-
-                    Document document = projectItem.Document;
-                    TextDocument textDocument = document.Object("TextDocument") as TextDocument;
-
-                    if (textDocument == null) return;
-
-                    Parser parser =
-                        new Parser(projectItem, SettingsHelper.Instance.Settings, StartMenuItemPackage.ApplicationObject);
-                    bool result = parser.Start(textDocument.StartPoint, textDocument.EndPoint, textDocument.EndPoint.Line);
-                    document.Close();
-
-                    if (!result) return;
-
-                    Parsers.Add(parser);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Unknown problem occurred while analyzing file: " + csFilePath);
-            }
-        }
+        
     }
 }

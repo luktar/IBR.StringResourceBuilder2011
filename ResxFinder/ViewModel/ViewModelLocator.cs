@@ -55,11 +55,13 @@ namespace ResxFinder.ViewModel
             try
             {
                 string isTestModeValue = ConfigurationManager.AppSettings[IS_TEST_MODE];
+
                 if (string.IsNullOrEmpty(isTestModeValue))
                 {
                     logger.Info($"{IS_TEST_MODE}: {false.ToString()}");
                     return false;
                 }
+
                 bool result = bool.Parse(isTestModeValue);
                 logger.Info($"{IS_TEST_MODE}: {result.ToString()}");
 

@@ -1,4 +1,4 @@
-﻿namespace ResxFinder
+﻿namespace ResxFinder.Views
 {
     using ResxFinder.ViewModel;
     using System.Windows.Controls;
