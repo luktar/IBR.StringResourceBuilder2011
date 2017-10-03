@@ -8,7 +8,7 @@
         public MainWindowControl()
         {
             this.InitializeComponent();
-            DataContext = ViewModelLocator.Instance.GetViewModel<MainWindowControlViewModel>();
+            DataContext = ViewModelLocator.Instance.GetInstance<MainWindowControlViewModel>();
         }
     }
 }

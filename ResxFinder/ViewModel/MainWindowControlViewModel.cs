@@ -16,10 +16,6 @@ namespace ResxFinder.ViewModel
 {
     public class MainWindowControlViewModel : ViewModelBase
     {
-        /// <summary>
-        /// http://www.wwwlicious.com/2011/03/29/envdte-getting-all-projects-html/
-        /// </summary>
-        public const string PROJECT_KIND_SOLUTION_FOLDER = "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}";
 
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
@@ -51,7 +47,10 @@ namespace ResxFinder.ViewModel
         {
             Parsers = new List<Parser>();
 
-            foreach (Project project in GetProjects())
+            ISolutionProjectsHelper solutionProjectHelper = 
+                ViewModelLocator.Instance.GetInstance<ISolutionProjectsHelper>();
+
+            foreach (Project project in solutionProjectHelper.GetProjects())
             {
 
                 AnalyzeProjectItems(project.ProjectItems);
@@ -68,22 +67,6 @@ namespace ResxFinder.ViewModel
             {
                 SettingsHelper.Instance.Save();
             }
-        }
-
-        private void AnalyzeSolutionFolder(ProjectItem projectItem)
-        {
-            if (projectItem.Kind == PROJECT_KIND_SOLUTION_FOLDER)
-            {
-                if (projectItem.ProjectItems == null) return;
-
-                foreach (ProjectItem subProjectItem in projectItem.ProjectItems)
-                {
-                    AnalyzeSolutionFolder(subProjectItem);
-                }
-                return;
-            }
-
-            AnalyzeProjectItems(projectItem.ProjectItems);
         }
 
         private void WriteReport()
@@ -156,56 +139,6 @@ namespace ResxFinder.ViewModel
             {
                 logger.Error(ex, "Unknown problem occurred while analyzing file: " + csFilePath);
             }
-        }
-
-        public List<Project> GetProjects()
-        {
-            Projects projects = StartMenuItemPackage.ApplicationObject.Solution.Projects;
-            List<Project> list = new List<Project>();
-            var item = projects.GetEnumerator();
-            while (item.MoveNext())
-            {
-                var project = item.Current as Project;
-                if (project == null)
-                {
-                    continue;
-                }
-
-                if (project.Kind == PROJECT_KIND_SOLUTION_FOLDER)
-                {
-                    list.AddRange(GetSolutionFolderProjects(project));
-                }
-                else
-                {
-                    list.Add(project);
-                }
-            }
-
-            return list;
-        }
-
-        private List<Project> GetSolutionFolderProjects(Project solutionFolder)
-        {
-            List<Project> list = new List<Project>();
-            for (var i = 1; i <= solutionFolder.ProjectItems.Count; i++)
-            {
-                var subProject = solutionFolder.ProjectItems.Item(i).SubProject;
-                if (subProject == null)
-                {
-                    continue;
-                }
-
-                // If this is another solution folder, do a recursive call, otherwise add
-                if (subProject.Kind == PROJECT_KIND_SOLUTION_FOLDER)
-                {
-                    list.AddRange(GetSolutionFolderProjects(subProject));
-                }
-                else
-                {
-                    list.Add(subProject);
-                }
-            }
-            return list;
         }
     }
 }

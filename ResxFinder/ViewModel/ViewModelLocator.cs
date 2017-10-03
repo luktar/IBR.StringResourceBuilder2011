@@ -1,32 +1,22 @@
-﻿/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocatorTemplate xmlns:vm="clr-namespace:MvvmLight1.ViewModel"
-                                   x:Key="Locator" />
-  </Application.Resources>
-  
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
-*/
-
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using NLog;
 using ResxFinder.Core;
+using ResxFinder.Core.SolutionAnalyzer;
 using ResxFinder.Design;
 using ResxFinder.Interfaces;
+using System;
+using System.Configuration;
 
 namespace ResxFinder.ViewModel
 {
-    /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
-    /// <para>
-    /// See http://www.mvvmlight.net
-    /// </para>
-    /// </summary>
     public class ViewModelLocator
     {
+        private const string IS_TEST_MODE = "IsTestMode";
+
+        private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
+
         private static ViewModelLocator instance;
 
         public static ViewModelLocator Instance
@@ -43,19 +33,34 @@ namespace ResxFinder.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            if (ViewModelBase.IsInDesignModeStatic)
+            if (IsTestMode())
             {
-                //SimpleIoc.Default.Register<IParser, DesignParser>();
+
             }
             else
             {
-                //SimpleIoc.Default.Register<IParser, Parser>();
+                SimpleIoc.Default.Register<ISolutionHelper, SolutionHelper>();
+                SimpleIoc.Default.Register<ISolutionProjectsHelper, SolutionProjectsHelper>();
             }
 
             SimpleIoc.Default.Register<MainWindowControlViewModel>();
         }
 
-        public T GetViewModel<T>()
+        private bool IsTestMode()
+        {
+            try
+            {
+                string isTestModeValue = ConfigurationManager.AppSettings[IS_TEST_MODE];
+                if (string.IsNullOrEmpty(isTestModeValue)) return false;
+                return bool.Parse(isTestModeValue);
+            } catch(Exception e)
+            {
+                logger.Warn(e, "Problem with reading configuration value: " + IS_TEST_MODE);
+                return false;
+            }
+        }
+
+        public T GetInstance<T>()
         {
             return ServiceLocator.Current.GetInstance<T>();
         }
