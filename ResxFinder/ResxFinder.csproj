@@ -64,14 +64,17 @@
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Core\Parser.cs" />
     <Compile Include="Core\SettingsHelper.cs" />
-    <Compile Include="Core\StringResource.cs" />
+    <Compile Include="Core\StringResourceViewModel.cs" />
     <Compile Include="CustomControls\NumericUpDown.cs" />
     <Compile Include="Design\DesignParser.cs" />
     <Compile Include="Interfaces\IParser.cs" />
+    <Compile Include="Interfaces\IParserServiceProvider.cs" />
     <Compile Include="Interfaces\ISolutionHelper.cs" />
     <Compile Include="Interfaces\ISolutionProjectsHelper.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="MainWindowCommand.cs" />
+    <Compile Include="ViewModel\ParserViewModel.cs" />
+    <Compile Include="ViewModel\StringResourceViewModel.cs" />
     <Compile Include="Views\MainWindowControl.xaml.cs">
       <DependentUpon>MainWindowControl.xaml</DependentUpon>
     </Compile>
@@ -82,6 +85,9 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\ListEditor.xaml.cs">
       <DependentUpon>ListEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ParserView.xaml.cs">
+      <DependentUpon>ParserView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -250,6 +256,10 @@
     <Page Include="Views\ListEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ParserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

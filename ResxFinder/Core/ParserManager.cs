@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using Microsoft.VisualStudio;
 using NLog;
+using ResxFinder.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ResxFinder.Core
 {
-    public class ParserManager
+    public class ParserManager : IParserManager
     {
         private const string FULL_PATH = "FullPath";
         private const string CS_EXTESION = ".cs";
@@ -17,11 +18,13 @@ namespace ResxFinder.Core
 
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
-        public List<Parser> Parsers { get; private set; }
+        public List<Parser> Parsers { get; private set; } = new List<Parser>();
 
-        public void Start(List<Project> projects)
+        public List<Parser> GetParsers(List<Project> projects)
         {
+            Parsers.Clear();
             projects.ForEach(x => AnalyzeProjectItems(x.ProjectItems));
+            return Parsers;
         }
 
         private void AnalyzeProjectItems(ProjectItems projectItems)
