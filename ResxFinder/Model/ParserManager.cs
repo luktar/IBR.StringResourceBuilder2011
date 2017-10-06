@@ -51,7 +51,7 @@ namespace ResxFinder.Model
                 csFilePath = projectItem.Properties.Item(FULL_PATH).Value.ToString();
                 if (csFilePath.EndsWith(CS_EXTESION))
                 {
-
+                    bool wasOpen = projectItem.IsOpen;
                     if (!projectItem.IsOpen)
                         projectItem.Open();
 
@@ -63,7 +63,9 @@ namespace ResxFinder.Model
                     Parser parser =
                         new Parser(projectItem, SettingsHelper.Instance.Settings, StartMenuItemPackage.ApplicationObject);
                     bool result = parser.Start(textDocument.StartPoint, textDocument.EndPoint, textDocument.EndPoint.Line);
-                    document.Close();
+
+                    if(!wasOpen)
+                        document.Close();
 
                     if (!result) return;
 

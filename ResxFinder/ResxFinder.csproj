@@ -64,7 +64,7 @@
     <Compile Include="Model\Settings.cs" />
     <Compile Include="Model\Parser.cs" />
     <Compile Include="Model\SettingsHelper.cs" />
-    <Compile Include="Model\StringResourceViewModel.cs" />
+    <Compile Include="Model\StringResource.cs" />
     <Compile Include="CustomControls\NumericUpDown.cs" />
     <Compile Include="Design\DesignParser.cs" />
     <Compile Include="Interfaces\IParser.cs" />

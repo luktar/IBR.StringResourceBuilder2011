@@ -5,9 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ResxFinder.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Background="LightGray">
+             d:DesignHeight="300" d:DesignWidth="300" Background="White">
     <StackPanel Orientation="Vertical">
-        <TextBlock Text="{Binding FileName}" />
-        <DataGrid ItemsSource="{Binding StringResources}"/>
+        <TextBlock Text="{Binding FileName}" Foreground="Black"/>
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CollectionView}"  IsSynchronizedWithCurrentItem="True">
+            <DataGrid.InputBindings>
+                <MouseBinding
+                    MouseAction="LeftDoubleClick"
+                    Command="{Binding DoubleClickCommand}"
+                    CommandParameter="{Binding CollectionView/}"/>
+            </DataGrid.InputBindings>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Text" Binding="{Binding Text}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Location" Binding="{Binding Location}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </StackPanel>
 </UserControl>
