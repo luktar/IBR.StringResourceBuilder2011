@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.VisualStudio;
 using NLog;
-using ResxFinder.Core;
+using ResxFinder.Model;
 using ResxFinder.Interfaces;
 using ResxFinder.Views;
 using System;

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EnvDTE;
 
-namespace ResxFinder.Core.SolutionAnalyzer
+namespace ResxFinder.Model.SolutionAnalyzer
 {
     public class SolutionHelper : ISolutionHelper
     {

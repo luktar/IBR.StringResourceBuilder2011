@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using EnvDTE;
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
   public static class ExtensionMethods
   {
@@ -16,7 +16,7 @@ namespace ResxFinder.Core
     }
 
 
-        public static bool HasStartPoint(this CodeElement element)
+    public static bool HasStartPoint(this CodeElement element)
     {
       try
       {

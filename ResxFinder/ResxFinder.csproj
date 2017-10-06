@@ -54,17 +54,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Core\ImageGreyer.cs" />
-    <Compile Include="Core\NLogManager.cs" />
-    <Compile Include="Core\ParserManager.cs" />
-    <Compile Include="Core\SolutionAnalyzer\SolutionHelper.cs" />
-    <Compile Include="Core\SolutionAnalyzer\SolutionProjectsHelper.cs" />
-    <Compile Include="Core\Util.cs" />
-    <Compile Include="Core\ExtensionMethods.cs" />
-    <Compile Include="Core\Settings.cs" />
-    <Compile Include="Core\Parser.cs" />
-    <Compile Include="Core\SettingsHelper.cs" />
-    <Compile Include="Core\StringResourceViewModel.cs" />
+    <Compile Include="Model\ImageGreyer.cs" />
+    <Compile Include="Model\NLogManager.cs" />
+    <Compile Include="Model\ParserManager.cs" />
+    <Compile Include="Model\SolutionAnalyzer\SolutionHelper.cs" />
+    <Compile Include="Model\SolutionAnalyzer\SolutionProjectsHelper.cs" />
+    <Compile Include="Model\Util.cs" />
+    <Compile Include="Model\ExtensionMethods.cs" />
+    <Compile Include="Model\Settings.cs" />
+    <Compile Include="Model\Parser.cs" />
+    <Compile Include="Model\SettingsHelper.cs" />
+    <Compile Include="Model\StringResourceViewModel.cs" />
     <Compile Include="CustomControls\NumericUpDown.cs" />
     <Compile Include="Design\DesignParser.cs" />
     <Compile Include="Interfaces\IParser.cs" />

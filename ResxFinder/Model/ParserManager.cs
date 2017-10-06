@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
     public class ParserManager : IParserManager
     {
@@ -66,6 +66,8 @@ namespace ResxFinder.Core
                     document.Close();
 
                     if (!result) return;
+
+                    if (parser.StringResources.Count == 0) return;
 
                     Parsers.Add(parser);
                 }

@@ -5,7 +5,7 @@ using System.Text;
 
 
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
   public class StringResource
   {

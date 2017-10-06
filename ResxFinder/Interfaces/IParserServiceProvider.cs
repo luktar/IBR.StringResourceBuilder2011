@@ -1,5 +1,5 @@
 ﻿using EnvDTE;
-using ResxFinder.Core;
+using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

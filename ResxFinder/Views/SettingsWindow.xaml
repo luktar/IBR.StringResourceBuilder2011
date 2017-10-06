@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ResxFinder.Views"
-        xmlns:core="clr-namespace:ResxFinder.Core"
+        xmlns:core="clr-namespace:ResxFinder.Model"
         xmlns:customControls="clr-namespace:ResxFinder.CustomControls"
         mc:Ignorable="d"
         Title="String Resource Builder Settings"

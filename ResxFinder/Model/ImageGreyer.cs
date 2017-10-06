@@ -26,7 +26,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
   /// <summary>
   /// ImageGreyer class exposing attachable dependency property that when attached to an Image

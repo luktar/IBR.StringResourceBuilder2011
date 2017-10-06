@@ -2,8 +2,8 @@
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using NLog;
-using ResxFinder.Core;
-using ResxFinder.Core.SolutionAnalyzer;
+using ResxFinder.Model;
+using ResxFinder.Model.SolutionAnalyzer;
 using ResxFinder.Design;
 using ResxFinder.Interfaces;
 using System;

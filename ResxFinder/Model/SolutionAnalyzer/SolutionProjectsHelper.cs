@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ResxFinder.Core.SolutionAnalyzer
+namespace ResxFinder.Model.SolutionAnalyzer
 {
     public class SolutionProjectsHelper : ISolutionProjectsHelper
     {

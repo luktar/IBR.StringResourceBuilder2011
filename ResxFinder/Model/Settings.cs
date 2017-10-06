@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
   [Serializable]
   public class Settings

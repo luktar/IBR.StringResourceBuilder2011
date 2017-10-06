@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
   internal static class CUtil
   {

@@ -6,7 +6,7 @@ using EnvDTE80;
 using NLog;
 using ResxFinder.Interfaces;
 
-namespace ResxFinder.Core
+namespace ResxFinder.Model
 {
     public class Parser : IParser
     {
@@ -310,8 +310,7 @@ namespace ResxFinder.Core
                                             List<StringResource> stringResources,
                                             Settings settings,
                                             bool isCSharp,
-                                            ref bool isComment
-                                       )
+                                            ref bool isComment)
         {
             List<int> stringPos = new List<int>();
 
