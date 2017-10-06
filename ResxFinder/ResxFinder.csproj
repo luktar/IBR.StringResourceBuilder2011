@@ -54,7 +54,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\ImageGreyer.cs" />
+    <Compile Include="Model\ItemSelectionHelper.cs" />
     <Compile Include="Model\NLogManager.cs" />
     <Compile Include="Model\ParserManager.cs" />
     <Compile Include="Model\SolutionAnalyzer\SolutionHelper.cs" />

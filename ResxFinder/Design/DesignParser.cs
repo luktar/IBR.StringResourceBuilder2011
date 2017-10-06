@@ -10,6 +10,11 @@ namespace ResxFinder.Design
 {
     public class DesignParser : IParser
     {
+        public TextDocument GetTextDocument()
+        {
+            return null;
+        }
+
         public bool Start(TextPoint startPoint, TextPoint endPoint, int lastDocumentLength)
         {
             return false;

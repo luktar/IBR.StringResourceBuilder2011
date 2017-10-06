@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using NLog;
 using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace ResxFinder.ViewModel
 {
     public class ParserViewModel : ViewModelBase
     {
+        private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
+
+        private StringResourceViewModel selectedItem;
         private string fileName;
 
         public ICollectionView CollectionView { get; set; }
@@ -29,6 +33,19 @@ namespace ResxFinder.ViewModel
             {
                 fileName = value;
                 RaisePropertyChanged(nameof(FileName));
+            }
+        }
+
+        public StringResourceViewModel SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                selectedItem = value;
+                RaisePropertyChanged(nameof(SelectedItem));
             }
         }
 
@@ -49,7 +66,19 @@ namespace ResxFinder.ViewModel
 
         private void DoubleClickPressed()
         {
-            
+            try
+            {
+                if (SelectedItem == null) return;
+                ItemSelectionHelper.SelectStringInTextDocument(Parser.GetTextDocument(), SelectedItem.StringResource);
+
+            } catch(Exception e)
+            {
+                string itemData = "Unknown element.";
+                if (SelectedItem != null)
+                    itemData = SelectedItem.ToString();
+
+                logger.Warn(e, "Problem occurred while double click on element: " + itemData);
+            }
         }
     }
 }

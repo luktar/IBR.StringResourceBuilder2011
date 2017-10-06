@@ -114,6 +114,24 @@ namespace ResxFinder.Model
             }
         }
 
+        public TextDocument GetTextDocument()
+        {
+            try
+            {
+                if (!projectItem.IsOpen)
+                    projectItem.Open();
+
+                Document document = projectItem.Document;
+                return document.Object(Constants.TEXT_DOCUMENT) as TextDocument;
+
+            } catch
+            {
+                logger.Warn("Problem with obtaining TextDocument for file: " + FileName);
+                throw;
+            }
+        }
+
+
         private static bool IsElementCorrect(CodeElement element, int startLine,
                                         int endLine, bool isCSharp)
         {

@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300" Background="White">
     <StackPanel Orientation="Vertical">
         <TextBlock Text="{Binding FileName}" Foreground="Black"/>
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CollectionView}"  IsSynchronizedWithCurrentItem="True">
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CollectionView}"  IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}">
             <DataGrid.InputBindings>
                 <MouseBinding
                     MouseAction="LeftDoubleClick"

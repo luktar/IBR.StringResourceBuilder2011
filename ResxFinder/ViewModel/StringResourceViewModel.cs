@@ -15,7 +15,7 @@ namespace ResxFinder.ViewModel
         private string name;
         private Point location;
 
-        private StringResource StringResource { get; set; }
+        public StringResource StringResource { get; private set; }
 
         public string Text
         {
@@ -54,6 +54,11 @@ namespace ResxFinder.ViewModel
             Name = StringResource.Name;
             Text = StringResource.Text;
             Location = StringResource.Location;
+        }
+
+        public override string ToString()
+        {
+            return Name ?? "Unknown name" + ", " + Text ?? "Unknown text.";
         }
     }
 }
