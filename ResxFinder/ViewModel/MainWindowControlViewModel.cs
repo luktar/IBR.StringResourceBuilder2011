@@ -42,10 +42,13 @@ namespace ResxFinder.ViewModel
             IParserManager parserManager = 
                 ViewModelLocator.Instance.GetInstance<IParserManager>();
 
+            IDocumentsManager documentesManager =
+                ViewModelLocator.Instance.GetInstance<IDocumentsManager>();
+
             List<Parser> parsers = parserManager.GetParsers(projects);
 
             Parsers.Clear();
-            parsers.ForEach(x => Parsers.Add(new ParserViewModel(x)));
+            parsers.ForEach(x => Parsers.Add(new ParserViewModel(x, documentesManager)));
         }
 
         private void PropertiesPressed()

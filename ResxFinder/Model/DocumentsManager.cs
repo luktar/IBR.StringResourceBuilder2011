@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using NLog;
+using ResxFinder.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ResxFinder.Model
 {
-    public class DocumentsManager
+    public class DocumentsManager : IDocumentsManager
     {
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 

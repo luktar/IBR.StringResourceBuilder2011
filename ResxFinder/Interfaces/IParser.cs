@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace ResxFinder.Interfaces
 {
     public interface IParser
     {
+        ProjectItem ProjectItem { get; }
+        string FileName { get; }
+        List<StringResource> StringResources { get; }
         bool Start(TextPoint startPoint, TextPoint endPoint, int lastDocumentLength);
     }
 }

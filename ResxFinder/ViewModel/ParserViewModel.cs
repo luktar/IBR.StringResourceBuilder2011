@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
+using ResxFinder.Interfaces;
 using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,13 @@ namespace ResxFinder.ViewModel
         private StringResourceViewModel selectedItem;
         private string fileName;
 
+        private IDocumentsManager DocumentsManager { get; set; }
+
         public ICollectionView CollectionView { get; set; }
 
-        public RelayCommand DoubleClickCommand { get; set; }
+        private IParser Parser { get; set; }
 
-        private Parser Parser { get; set; }
+        public RelayCommand DoubleClickCommand { get; set; }
 
         public string FileName
         {
@@ -53,8 +56,9 @@ namespace ResxFinder.ViewModel
         public List<StringResourceViewModel> StringResources { get; set; } = 
             new List<StringResourceViewModel>();
 
-        public ParserViewModel(Parser parser)
+        public ParserViewModel(IParser parser, IDocumentsManager documentsManager)
         {
+            DocumentsManager = documentsManager;    
             Parser = parser;
             FileName = Parser.FileName;
             Parser.StringResources.ForEach(x => StringResources.Add(
@@ -70,10 +74,9 @@ namespace ResxFinder.ViewModel
             try
             {
                 if (SelectedItem == null) return;
-
-                DocumentsManager documentsManager = new DocumentsManager();
-                documentsManager.OpenWindow(Parser.FileName);
-                TextDocument textDocument = documentsManager.GetTextDocument(Parser.ProjectItem);
+          
+                DocumentsManager.OpenWindow(Parser.FileName);
+                TextDocument textDocument = DocumentsManager.GetTextDocument(Parser.ProjectItem);
                 ItemSelectionHelper.SelectStringInTextDocument(
                     textDocument, SelectedItem.StringResource);
 
