@@ -55,6 +55,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\DocumentsManager.cs" />
     <Compile Include="Model\ImageGreyer.cs" />
     <Compile Include="Model\ItemSelectionHelper.cs" />
     <Compile Include="Model\NLogManager.cs" />

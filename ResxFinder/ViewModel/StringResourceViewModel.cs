@@ -14,8 +14,18 @@ namespace ResxFinder.ViewModel
         private string text;
         private string name;
         private Point location;
+        private bool isChecked;
 
         public StringResource StringResource { get; private set; }
+
+        public bool IsChecked
+        {
+            get { return isChecked; }
+            set {
+                isChecked = value;
+                RaisePropertyChanged(nameof(IsChecked));
+            }
+        }
 
         public string Text
         {

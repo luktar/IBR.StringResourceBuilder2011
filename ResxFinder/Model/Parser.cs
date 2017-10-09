@@ -16,7 +16,7 @@ namespace ResxFinder.Model
         private DTE2 dte;   
         private Settings m_Settings;
         private bool isCsharp;
-        private ProjectItem projectItem;
+        public ProjectItem ProjectItem { get; private set; }
 
         public string FileName { get; private set; }
 
@@ -26,7 +26,7 @@ namespace ResxFinder.Model
                             Settings settings,
                             DTE2 dte)
         {
-            this.projectItem = projectItem;
+            this.ProjectItem = projectItem;
             isCsharp = true;
             FileName = projectItem.Properties.Item(FULL_PATH).Value.ToString();
             this.dte = dte;
@@ -91,7 +91,7 @@ namespace ResxFinder.Model
 
                 if (isTextWithStringLiteral)
                 {
-                    CodeElements elements = projectItem.FileCodeModel.CodeElements;
+                    CodeElements elements = ProjectItem.FileCodeModel.CodeElements;
 
                     foreach (CodeElement element in elements)
                     {
@@ -113,24 +113,6 @@ namespace ResxFinder.Model
                 return false;
             }
         }
-
-        public TextDocument GetTextDocument()
-        {
-            try
-            {
-                if (!projectItem.IsOpen)
-                    projectItem.Open();
-
-                Document document = projectItem.Document;
-                return document.Object(Constants.TEXT_DOCUMENT) as TextDocument;
-
-            } catch
-            {
-                logger.Warn("Problem with obtaining TextDocument for file: " + FileName);
-                throw;
-            }
-        }
-
 
         private static bool IsElementCorrect(CodeElement element, int startLine,
                                         int endLine, bool isCSharp)

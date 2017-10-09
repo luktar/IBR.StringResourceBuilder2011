@@ -48,8 +48,8 @@ namespace ResxFinder.Model
                 if (csFilePath.EndsWith(Constants.CS_EXTESION))
                 {
                     bool wasOpen = projectItem.IsOpen;
-                    if (!projectItem.IsOpen)
-                        projectItem.Open();
+                    if (!projectItem.IsOpen) { 
+                        projectItem.Open();}
 
                     Document document = projectItem.Document;
                     TextDocument textDocument = document.Object(Constants.TEXT_DOCUMENT) as TextDocument;

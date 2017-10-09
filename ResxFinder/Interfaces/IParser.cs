@@ -10,6 +10,5 @@ namespace ResxFinder.Interfaces
     public interface IParser
     {
         bool Start(TextPoint startPoint, TextPoint endPoint, int lastDocumentLength);
-        TextDocument GetTextDocument();
     }
 }

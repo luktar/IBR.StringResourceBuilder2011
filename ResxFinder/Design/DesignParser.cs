@@ -10,7 +10,7 @@ namespace ResxFinder.Design
 {
     public class DesignParser : IParser
     {
-        public TextDocument GetTextDocument()
+        public TextDocument OpenTextDocument()
         {
             return null;
         }

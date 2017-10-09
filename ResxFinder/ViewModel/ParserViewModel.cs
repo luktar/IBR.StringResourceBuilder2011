@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using EnvDTE;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using NLog;
 using ResxFinder.Model;
@@ -69,7 +70,12 @@ namespace ResxFinder.ViewModel
             try
             {
                 if (SelectedItem == null) return;
-                ItemSelectionHelper.SelectStringInTextDocument(Parser.GetTextDocument(), SelectedItem.StringResource);
+
+                DocumentsManager documentsManager = new DocumentsManager();
+                documentsManager.OpenWindow(Parser.FileName);
+                TextDocument textDocument = documentsManager.GetTextDocument(Parser.ProjectItem);
+                ItemSelectionHelper.SelectStringInTextDocument(
+                    textDocument, SelectedItem.StringResource);
 
             } catch(Exception e)
             {
@@ -77,7 +83,8 @@ namespace ResxFinder.ViewModel
                 if (SelectedItem != null)
                     itemData = SelectedItem.ToString();
 
-                logger.Warn(e, "Problem occurred while double click on element: " + itemData);
+                logger.Warn(e, "Problem occurred while double click on element: " + 
+                    itemData + ", in file: " + Parser.FileName);
             }
         }
     }
