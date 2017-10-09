@@ -10,6 +10,6 @@ namespace ResxFinder.Interfaces
 {
     public interface IParserManager
     {
-        List<Parser> GetParsers(List<Project> projects);
+        List<IParser> GetParsers(List<Project> projects);
     }
 }

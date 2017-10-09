@@ -13,6 +13,7 @@ namespace ResxFinder.Model
         private const string FULL_PATH = "FullPath";
 
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
+
         private DTE2 dte;   
         private Settings m_Settings;
         private bool isCsharp;

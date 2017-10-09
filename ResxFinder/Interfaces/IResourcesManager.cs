@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace ResxFinder.Interfaces
 {
-    public interface IDocumentsManager
+    public interface IResourcesManager
     {
-        Window OpenWindow(string fileName);
-
-        TextDocument GetTextDocument(ProjectItem projectItem);
+        void WriteToResource(StringResource stringResource);
     }
 }

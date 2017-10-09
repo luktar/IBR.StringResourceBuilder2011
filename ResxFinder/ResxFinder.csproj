@@ -55,12 +55,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IDocumentsManager.cs" />
+    <Compile Include="Interfaces\IResourcesManager.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\DocumentsManager.cs" />
     <Compile Include="Model\ImageGreyer.cs" />
     <Compile Include="Model\ItemSelectionHelper.cs" />
     <Compile Include="Model\NLogManager.cs" />
     <Compile Include="Model\ParserManager.cs" />
+    <Compile Include="Model\ResourcesManager.cs" />
     <Compile Include="Model\SolutionAnalyzer\SolutionHelper.cs" />
     <Compile Include="Model\SolutionAnalyzer\SolutionProjectsHelper.cs" />
     <Compile Include="Model\Util.cs" />
@@ -244,6 +246,9 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

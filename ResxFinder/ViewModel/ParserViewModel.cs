@@ -26,7 +26,7 @@ namespace ResxFinder.ViewModel
 
         public ICollectionView CollectionView { get; set; }
 
-        private IParser Parser { get; set; }
+        public IParser Parser { get; private set; }
 
         public RelayCommand DoubleClickCommand { get; set; }
 

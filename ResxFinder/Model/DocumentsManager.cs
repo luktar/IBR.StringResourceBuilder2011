@@ -14,14 +14,14 @@ namespace ResxFinder.Model
     {
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
-        public void OpenWindow(string fileName)
+        public Window OpenWindow(string fileName)
         {
             try
             {
                 DTE2 dte = StartMenuItemPackage.ApplicationObject;
                 dte.MainWindow.Activate();
 
-                dte.ItemOperations.OpenFile(fileName, EnvDTE.Constants.vsViewKindTextView);
+                return dte.ItemOperations.OpenFile(fileName, EnvDTE.Constants.vsViewKindTextView);
             }
             catch
             {

@@ -14,8 +14,9 @@
             <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
 >
                 <Button DockPanel.Dock="Left" Content="Properties" Command="{Binding PropertiesCommand}"/>
-                <Button DockPanel.Dock="Right" Name="button" Content="Run!" Command="{Binding RunCommand}"/>
-
+                <Button DockPanel.Dock="Right" Content="Move to resources" Command="{Binding MoveToResourcesCommand}"/>
+                <Button DockPanel.Dock="Right" Content="Run!" Command="{Binding RunCommand}"/>
+                
             </DockPanel>
             <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Parsers}">
                 <ItemsControl.ItemTemplate>

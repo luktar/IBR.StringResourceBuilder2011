@@ -39,5 +39,10 @@ namespace ResxFinder.Model
 
             m_Location.Offset(lineOffset, columnOffset);
     }
-  }
+
+        public override string ToString()
+        {
+            return $"{Name ?? "Unknown name"}, {Text ?? "Unknown text"}.";
+        }
+    }
 }

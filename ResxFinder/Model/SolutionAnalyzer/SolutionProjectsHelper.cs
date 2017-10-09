@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using NLog;
 using ResxFinder.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace ResxFinder.Model.SolutionAnalyzer
 {
     public class SolutionProjectsHelper : ISolutionProjectsHelper
     {
+        private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
+
         /// <summary>
         /// http://www.wwwlicious.com/2011/03/29/envdte-getting-all-projects-html/
         /// </summary>
@@ -24,29 +27,41 @@ namespace ResxFinder.Model.SolutionAnalyzer
 
         public List<Project> GetProjects()
         {
-            Projects projects = Solution.Projects;
-            List<Project> list = new List<Project>();
-
-            var item = projects.GetEnumerator();
-            while (item.MoveNext())
+            string currentProjectName = string.Empty;
+            try
             {
-                var project = item.Current as Project;
-                if (project == null)
+                Projects projects = Solution.Projects;
+                List<Project> list = new List<Project>();
+
+                var item = projects.GetEnumerator();
+
+                while (item.MoveNext())
                 {
-                    continue;
+                    var project = item.Current as Project;               
+
+                    if (project == null)
+                    {
+                        continue;
+                    }
+
+                    currentProjectName = project.Name;
+
+                    if (project.Kind == PROJECT_KIND_SOLUTION_FOLDER)
+                    {
+                        list.AddRange(GetSolutionFolderProjects(project));
+                    }
+                    else
+                    {
+                        list.Add(project);
+                    }
                 }
 
-                if (project.Kind == PROJECT_KIND_SOLUTION_FOLDER)
-                {
-                    list.AddRange(GetSolutionFolderProjects(project));
-                }
-                else
-                {
-                    list.Add(project);
-                }
+                return list;
+            } catch
+            {
+                logger.Error("Unable to obtain projects from solution.");
+                throw;
             }
-
-            return list;
         }
 
         private List<Project> GetSolutionFolderProjects(Project solutionFolder)

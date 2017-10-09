@@ -14,13 +14,24 @@ namespace ResxFinder.Model
     {
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
-        public List<Parser> Parsers { get; private set; } = new List<Parser>();
+        public List<IParser> Parsers { get; private set; } = new List<IParser>();
 
-        public List<Parser> GetParsers(List<Project> projects)
+        public List<IParser> GetParsers(List<Project> projects)
         {
-            Parsers.Clear();
-            projects.ForEach(x => AnalyzeProjectItems(x.ProjectItems));
-            return Parsers;
+            string currentProjectName = string.Empty;
+            try
+            {
+                Parsers.Clear();
+                projects.ForEach(x => {
+                    currentProjectName = x.FullName;
+                    AnalyzeProjectItems(x.ProjectItems);
+                });
+                return Parsers;
+            } catch
+            {
+                logger.Warn("An error occurred while parsing project: " + currentProjectName);
+                throw;
+            }
         }
 
         private void AnalyzeProjectItems(ProjectItems projectItems)
