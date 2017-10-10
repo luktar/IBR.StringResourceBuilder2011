@@ -43,7 +43,7 @@ namespace ResxFinder.ViewModel
 
         private void MoveToResourcesPressed()
         {
-            logger.Info("Moving hard coded strings to resource file.");
+            logger.Debug("Moving hard coded strings to resource file.");
 
             string projectFileName = string.Empty;
             string currentStringResource = null;
@@ -62,7 +62,10 @@ namespace ResxFinder.ViewModel
                         currentStringResource = y.ToString();
 
                         resourceManager.WriteToResource(y);
+                  
                     });
+                    resourceManager.InsertNamespace();
+
                 });
             } catch(Exception e)
             {

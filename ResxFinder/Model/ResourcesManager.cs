@@ -30,17 +30,40 @@ namespace ResxFinder.Model
 
         private string ProjectItemFileName { get; set; }
 
-        public ResourcesManager(Settings settings, 
-            ProjectItem projectItem, IDocumentsManager documentManager) //ProjectItem projectItem)
+        private string Namespace { get; set; }
+
+        private string ResxFileName { get; set; }
+
+        private string ClassName { get; set; }
+
+        private string AliasName { get; set; }
+
+        private bool IsGlobalResourceFile { get; set; }
+
+        private bool IsDontUseResourceUsingAlias { get; set; }
+
+        public ResourcesManager(Settings settings,
+            ProjectItem projectItem, IDocumentsManager documentManager)
         {
             TextDocument = documentManager.GetTextDocument(projectItem);
             ProjectItemFileName = projectItem.Properties.Item(Constants.FULL_PATH).Value.ToString();
             Window = documentManager.OpenWindow(ProjectItemFileName);
             Settings = settings;
             ProjectExtension = System.IO.Path.GetExtension(Window.Project.FullName).Substring(1);
+
+            ResourcesFile = GetResourceFile();
+            ResxFileName = ResourcesFile.Document.FullName;
+            Namespace = GetNamespace();
+            CloseResourcesDocuemnt();
+
+            ClassName = System.IO.Path.GetFileNameWithoutExtension(ResxFileName).Replace('.', '_');
+            AliasName = ClassName.Substring(0, ClassName.Length - 6);
+
+            IsGlobalResourceFile = Settings.IsUseGlobalResourceFile && string.IsNullOrEmpty(Settings.GlobalResourceFileName);
+            IsDontUseResourceUsingAlias = Settings.IsUseGlobalResourceFile && Settings.IsDontUseResourceAlias;
         }
 
-        private  ProjectItem GetResourceFile()
+        private ProjectItem GetResourceFile()
         {
             ProjectItem resourceFilePrjItem = null;
 
@@ -113,10 +136,11 @@ namespace ResxFinder.Model
 
                 if (System.IO.File.Exists(resourceFile) || System.IO.File.Exists(designerFile))
                 {
-                    string msg = string.Format("The resource file already exists though it is not included in the project:\r\n\r\n"
-                                               + "'{0}'\r\n\r\n"
-                                               + "Do you want to overwrite the existing resource file?",
-                                               resourceFile.Substring(projectPath.Length).TrimStart('\\'));
+                    string msg = string.Format(
+                        "The resource file already exists though it is not included in the project:\r\n\r\n" +
+                        "'{0}'\r\n\r\n" +
+                        "Do you want to overwrite the existing resource file?",
+                        resourceFile.Substring(projectPath.Length).TrimStart('\\'));
 
                     if (MessageBox.Show(msg, "Make resource", MessageBoxButton.YesNo,
                                         MessageBoxImage.Question) != MessageBoxResult.Yes)
@@ -141,7 +165,7 @@ namespace ResxFinder.Model
                 }
                 catch (Exception ex)
                 {
-                    
+
                     return null;
                 }
             }
@@ -182,99 +206,95 @@ namespace ResxFinder.Model
 
                 if ((Window != null) && (Window != Dte.ActiveWindow))
                     Window.Activate();
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Warn($"Problem with selecting string resource: {stringResource} in file: {ProjectItemFileName}");
                 throw e;
             }
         }
+        private string GetNamespace()
+        {
+            string nameSpace = Window.Project.Properties.Item("RootNamespace").Value.ToString();
+
+            #region get namespace from ResX designer file
+            foreach (ProjectItem item in ResourcesFile.ProjectItems)
+            {
+                if (item.Name.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
+                foreach (CodeElement element in item.FileCodeModel.CodeElements)
+                {
+                    if (element.Kind == vsCMElement.vsCMElementNamespace)
+                    {
+                        nameSpace = element.FullName;
+                        break;
+                    }
+                }
+            }
+
+            return nameSpace;
+        }
+
+        private void CloseResourcesDocuemnt()
+        {
+            //close the ResX file to modify it (force a checkout)
+            ResourcesFile.Document.Save(); //[13-07-10 DR]: MS has changed behavior of Close(vsSaveChanges.vsSaveChangesYes) in VS2012
+            ResourcesFile.Document.Close(vsSaveChanges.vsSaveChangesYes);
+        }
+
 
         public void WriteToResource(StringResource stringResource)
         {
             try
             {
                 SelectStringInTextDocument(stringResource);
-                ResourcesFile = GetResourceFile();
-                string resxFile = ResourcesFile.Document.FullName;
 
-                string nameSpace = Window.Project.Properties.Item("RootNamespace").Value.ToString();
-
-                #region get namespace from ResX designer file
-                foreach (ProjectItem item in ResourcesFile.ProjectItems)
-                {
-                    if (item.Name.EndsWith(".resx", StringComparison.InvariantCultureIgnoreCase))
-                        continue;
-
-                    foreach (CodeElement element in item.FileCodeModel.CodeElements)
-                    {
-                        if (element.Kind == vsCMElement.vsCMElementNamespace)
-                        {
-                            nameSpace = element.FullName;
-                            break;
-                        }
-                    }
-                }
                 #endregion
+                string comment = string.Empty;
 
-                //close the ResX file to modify it (force a checkout)
-                ResourcesFile.Document.Save(); //[13-07-10 DR]: MS has changed behavior of Close(vsSaveChanges.vsSaveChangesYes) in VS2012
-                ResourcesFile.Document.Close(vsSaveChanges.vsSaveChangesYes);
-
-                string name,
-                       value,
-                       comment = string.Empty;
-
-                name = stringResource.Name;
-                value = stringResource.Text;
+                string name = stringResource.Name;
+                string value = stringResource.Text;
 
                 if (TextDocument.Selection.Text.Length > 0 && TextDocument.Selection.Text[0] == '@')
-                    value = value.Replace("\"\"", "\\\""); // [""] -> [\"] (change VB writing to CSharp)
+                    value = value.Replace("\"\"", "\\\"");
 
                 //add to the resource file (checking for duplicate)
-                if (!AppendStringResource(resxFile, name, value, comment))
+                if (!AppendStringResource(ResxFileName, name, value, comment))
                     return;
 
-                //(re-)create the designer class
-                VSLangProj.VSProjectItem vsPrjItem = ResourcesFile.Object as VSLangProj.VSProjectItem;
-                if (vsPrjItem != null)
-                    vsPrjItem.RunCustomTool();
+                CreateDesignerClass();
+
+                if (string.IsNullOrEmpty(TextDocument.Selection.Text)) return;
 
                 //get the length of the selected string literal and replace by resource call
                 int replaceLength = TextDocument.Selection.Text.Length;
-                if (replaceLength > 0)
+
+
+                string resourceCall = string.Concat(AliasName, ".", name);
+                if (IsGlobalResourceFile)
                 {
-                    string className = System.IO.Path.GetFileNameWithoutExtension(resxFile).Replace('.', '_'),
-                           aliasName = className.Substring(0, className.Length - 6), //..._Resources -> ..._Res
-                           resourceCall = string.Concat(aliasName, ".", name);
-
-                    bool isGlobalResourceFile = Settings.IsUseGlobalResourceFile && string.IsNullOrEmpty(Settings.GlobalResourceFileName),
-                         isDontUseResourceUsingAlias = Settings.IsUseGlobalResourceFile && Settings.IsDontUseResourceAlias;
-
-                    if (isGlobalResourceFile)
-                    {
-                        //standard global resource file
-                        aliasName = string.Concat("Glbl", aliasName);
-                        resourceCall = string.Concat("Glbl", resourceCall);
-                    }
-
-                    int oldRow = TextDocument.Selection.ActivePoint.Line;
-
-                    if (!isDontUseResourceUsingAlias)
-                    {
-                        //insert the resource using alias (if not yet)
-                        CheckAndAddAlias(nameSpace, className, aliasName);
-                    }
-                    else
-                    {
-                        //create a resource call like "Properties.SRB_Strings_Resources.myResText", "Properties.Resources.myResText", "Resources.myResText"
-                        int lastDotPos = nameSpace.LastIndexOf('.');
-                        string resxNameSpace = (lastDotPos >= 0) ? string.Concat(nameSpace.Substring(lastDotPos + 1), ".") : string.Empty;
-                        resourceCall = string.Concat(resxNameSpace, className, ".", name);
-                    }
-
-                    //insert the resource call, replacing the selected string literal
-                    TextDocument.Selection.Insert(resourceCall, (int)vsInsertFlags.vsInsertFlagsContainNewText);
+                    //standard global resource file
+                    AliasName = string.Concat("Glbl", AliasName);
+                    resourceCall = string.Concat("Glbl", resourceCall);
                 }
+
+                int oldRow = TextDocument.Selection.ActivePoint.Line;
+
+                if (IsDontUseResourceUsingAlias)
+                {
+                    //create a resource call like "Properties.SRB_Strings_Resources.myResText", "Properties.Resources.myResText", "Resources.myResText"
+                    int lastDotPos = Namespace.LastIndexOf('.');
+
+                    string resxNameSpace = lastDotPos >= 0 ?
+                        string.Concat(Namespace.Substring(lastDotPos + 1), ".") :
+                        string.Empty;
+
+                    resourceCall = string.Concat(resxNameSpace, ClassName, ".", name);
+                }
+
+                TextDocument.Selection.Insert(
+                    resourceCall, (int)vsInsertFlags.vsInsertFlagsContainNewText);
             }
             catch (Exception e)
             {
@@ -283,17 +303,32 @@ namespace ResxFinder.Model
             }
         }
 
+        public void InsertNamespace()
+        {
+            try
+            {
+                CheckAndAddAlias(Namespace, ClassName, AliasName);
+            }
+            catch (Exception e)
+            {
+                logger.Warn(e, $"Unable to create name space for class: {Namespace}.{ClassName}, alias: {AliasName}.");
+            }
+        }
+
+        private void CreateDesignerClass()
+        {
+            //(re-)create the designer class
+            VSLangProj.VSProjectItem vsPrjItem = ResourcesFile.Object as VSLangProj.VSProjectItem;
+            if (vsPrjItem != null)
+                vsPrjItem.RunCustomTool();
+        }
+
         private void CheckAndAddAlias(string nameSpace,
                               string className,
                               string aliasName)
         {
             string resourceAlias1 = $"using {aliasName} = ",
                    resourceAlias2 = $"global::{nameSpace}.{className}";
-
-
-            resourceAlias1 = $"Imports {aliasName} = ";
-            resourceAlias2 = $"{nameSpace}.{className}";
-
 
             CodeElements elements = TextDocument.Parent.ProjectItem.FileCodeModel.CodeElements;
             CodeElement lastElement = null;
@@ -396,7 +431,6 @@ namespace ResxFinder.Model
                 if (value.Contains(@"\\"))
                     value = value.Replace(@"\\", @"\");
 
-
                 if (value.Contains("\\\""))
                     value = value.Replace("\\\"", "\"");
 
@@ -424,26 +458,33 @@ namespace ResxFinder.Model
                 xmlDoc.DocumentElement.AppendChild(dataElement);
 
                 xmlDoc.Save(resxFileName);
+                return true;
             }
             catch (Exception ex)
             {
-                return (false);
+                logger.Warn(
+                    ex, $"Unable to add resource to file: {resxFileName}, resource name: {name}, value: {value}, comment: {comment}");
+                return false;
             }
-
-            return (true);
         }
 
         private static void TryToSilentlyDeleteIfExistsEvenIfReadOnly(string file)
         {
-            if (System.IO.File.Exists(file))
+            try
             {
-                System.IO.FileAttributes attribs = System.IO.File.GetAttributes(file);
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.FileAttributes attribs = System.IO.File.GetAttributes(file);
 
-                if ((attribs & System.IO.FileAttributes.ReadOnly) != 0)
-                    System.IO.File.SetAttributes(file, attribs & ~System.IO.FileAttributes.ReadOnly);
+                    if ((attribs & System.IO.FileAttributes.ReadOnly) != 0)
+                        System.IO.File.SetAttributes(file, attribs & ~System.IO.FileAttributes.ReadOnly);
 
-                try { System.IO.File.Delete(file); }
-                catch { }
+                    System.IO.File.Delete(file);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Warn(e, $"Unable to delete resource file: {file}");
             }
         }
     }

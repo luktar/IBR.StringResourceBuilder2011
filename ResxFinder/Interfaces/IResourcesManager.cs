@@ -11,5 +11,7 @@ namespace ResxFinder.Interfaces
     public interface IResourcesManager
     {
         void WriteToResource(StringResource stringResource);
+
+        void InsertNamespace();
     }
 }
