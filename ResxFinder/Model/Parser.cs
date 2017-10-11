@@ -272,6 +272,7 @@ namespace ResxFinder.Model
                 string text = editPoint.GetText(endPoint);
 
                 if (text.Contains("@\"")) return -1;
+                if (text.ToLower().Contains("string const")) return -1;
 
                 string[] txtLines = text.Replace("\r", string.Empty).Split('\n');
                 bool isComment = false;
