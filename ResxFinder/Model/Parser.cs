@@ -190,7 +190,7 @@ namespace ResxFinder.Model
                 if ((element.Kind == vsCMElement.vsCMElementFunction) && settings.IgnoreMethod(element.Name))
                     return;
 
-                int lineNo = ParseForStrings(element, stringResources, settings, isCSharp, startLine, endLine);
+                ParseForStrings(element, stringResources, settings, isCSharp, startLine, endLine);
             }
         }
 
@@ -270,6 +270,9 @@ namespace ResxFinder.Model
                 int editLine = editPoint.Line,
                          editColumn = editPoint.LineCharOffset;
                 string text = editPoint.GetText(endPoint);
+
+                if (text.Contains("@\"")) return -1;
+
                 string[] txtLines = text.Replace("\r", string.Empty).Split('\n');
                 bool isComment = false;
 
