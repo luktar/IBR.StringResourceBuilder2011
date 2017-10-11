@@ -57,6 +57,8 @@ namespace ResxFinder.ViewModel
                     IResourcesManager resourceManager = new ResourcesManager(
                         SettingsHelper.Instance.Settings, x.Parser.ProjectItem, DocumentsManager);
 
+                    x.Parser.StringResources.Reverse();
+
                     x.Parser.StringResources.ForEach(y =>
                     {
                         currentStringResource = y.ToString();
