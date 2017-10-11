@@ -1,3 +1,4 @@
+using ResxFinder.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +12,8 @@ using System.Xml.Serialization;
 namespace ResxFinder.Model
 {
   [Serializable]
-  public class Settings
-  {
+  public class Settings : ISettings
+    {
     private static XmlSerializer ms_SettingsSerializer = new XmlSerializer(typeof(Settings));
 
     private static Regex ms_RegexNumber = new Regex(@"^\s*\d+\.?\d*\s*$");
@@ -125,7 +126,7 @@ namespace ResxFinder.Model
       return (xmlString);
     }
 
-    public static Settings DeSerialize(string xml)
+    public static ISettings DeSerialize(string xml)
     {
       if (string.IsNullOrEmpty(xml))
         return (null);

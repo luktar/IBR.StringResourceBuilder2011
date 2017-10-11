@@ -18,7 +18,7 @@ namespace ResxFinder.Model
 
         private DTE2 Dte { get; set; } = StartMenuItemPackage.ApplicationObject;
 
-        private Settings Settings { get; set; }
+        private ISettings Settings { get; set; }
 
         private EnvDTE.Window Window { get; set; }
 
@@ -42,7 +42,7 @@ namespace ResxFinder.Model
 
         private bool IsDontUseResourceUsingAlias { get; set; }
 
-        public ResourcesManager(Settings settings,
+        public ResourcesManager(ISettings settings,
             ProjectItem projectItem, IDocumentsManager documentManager)
         {
             TextDocument = documentManager.GetTextDocument(projectItem);
@@ -144,7 +144,7 @@ namespace ResxFinder.Model
 
                     if (MessageBox.Show(msg, "Make resource", MessageBoxButton.YesNo,
                                         MessageBoxImage.Question) != MessageBoxResult.Yes)
-                        return (null);
+                        return null;
                     else
                     {
                         TryToSilentlyDeleteIfExistsEvenIfReadOnly(resourceFile);
@@ -406,14 +406,8 @@ namespace ResxFinder.Model
                 XmlNode xmlNode = xmlDoc.DocumentElement.SelectSingleNode(xmlPath);
                 if (xmlNode != null)
                 {
-                    //xmlNode = xmlNode.SelectSingleNode("descendant::value");
-                    string msg = string.Format("This resource name already exists:\r\n\r\n"
-                                               + "{0} = '{1}'\r\n"
-                                               + "(new string is '{2}')\r\n\r\n"
-                                               + "Do you want to use the existing resource instead?",
-                                               name, xmlNode.InnerText, value);
-                    return !(MessageBox.Show(msg, "Make resource", MessageBoxButton.YesNo,
-                                        MessageBoxImage.Question) != MessageBoxResult.Yes);
+                    logger.Debug($"Replacing existing string exists: {name} = '{xmlNode.InnerText}' (new string is '{value}')");
+                    return true;
                 }
 
                 if (value.Contains("\\r"))

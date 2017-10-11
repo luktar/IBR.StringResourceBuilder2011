@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ResxFinder.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
@@ -7,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace ResxFinder.Model
 {
-    class SettingsHelper
+    public class SettingsHelper : ISettingsHelper
     {
         private bool isPathReadOnly;
         private string fileName;
         private bool isFileReadOnly;
-        private Settings settings;
+        private ISettings settings;
 
         private static SettingsHelper instance;
 
-        public Settings Settings { get
+        public ISettings Settings { get
             {
                 settings = GetSettings();
                 return settings;
@@ -42,7 +43,7 @@ namespace ResxFinder.Model
             System.IO.File.WriteAllText(fileName, settings.Serialize(), Encoding.UTF8);
         }
 
-        private Settings GetSettings()
+        private ISettings GetSettings()
         {
             string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             System.Diagnostics.Debug.Print(path);
@@ -57,7 +58,7 @@ namespace ResxFinder.Model
             if (System.IO.File.Exists(fileName))
             {
                 string xml = System.IO.File.ReadAllText(fileName, Encoding.UTF8);
-                return Settings.DeSerialize(xml);
+                return Model.Settings.DeSerialize(xml);
             }
             return new Settings();
         }

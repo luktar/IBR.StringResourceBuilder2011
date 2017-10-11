@@ -15,7 +15,7 @@ namespace ResxFinder.Model
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
         private DTE2 dte;   
-        private Settings m_Settings;
+        private ISettings m_Settings;
         private bool isCsharp;
         public ProjectItem ProjectItem { get; private set; }
 
@@ -24,7 +24,7 @@ namespace ResxFinder.Model
         public List<StringResource> StringResources { get; private set; } = new List<StringResource>();
 
         public Parser(ProjectItem projectItem,
-                            Settings settings,
+                            ISettings settings,
                             DTE2 dte)
         {
             this.ProjectItem = projectItem;
@@ -166,7 +166,7 @@ namespace ResxFinder.Model
         private static void ParseForStrings(CodeElement element,
                                         List<StringResource> stringResources,
                                         bool isCSharp,
-                                        Settings settings,
+                                        ISettings settings,
                                         int startLine,
                                         int endLine)
         {
@@ -194,14 +194,14 @@ namespace ResxFinder.Model
             }
         }
 
-        private static void AnalyzeCalssOrStructure(CodeElement element, List<StringResource> stringResources, bool isCSharp, Settings settings, int startLine, int endLine)
+        private static void AnalyzeCalssOrStructure(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
         {
             CodeElements elements = (element as CodeType).Members;
             foreach (CodeElement subElement in elements)
                 ParseForStrings(subElement, stringResources, isCSharp, settings, startLine, endLine);
         }
 
-        private static void AnalyzeNamespace(CodeElement element, List<StringResource> stringResources, bool isCSharp, Settings settings, int startLine, int endLine)
+        private static void AnalyzeNamespace(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
         {
             CodeElements elements = (element as CodeNamespace).Members;
 
@@ -209,7 +209,7 @@ namespace ResxFinder.Model
                 ParseForStrings(subElement, stringResources, isCSharp, settings, startLine, endLine);
         }
 
-        private static void AnalyzeProperty(CodeElement element, List<StringResource> stringResources, bool isCSharp, Settings settings, int startLine, int endLine)
+        private static void AnalyzeProperty(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
         {
             CodeProperty prop = element as CodeProperty;
 
@@ -240,7 +240,7 @@ namespace ResxFinder.Model
         /// <returns>The last parsed line number or -1.</returns>
         private static int ParseForStrings(CodeElement element,
                                            List<StringResource> stringResources,
-                                           Settings settings,
+                                           ISettings settings,
                                            bool isCSharp,
                                            int startLine,
                                            int endLine)
@@ -313,7 +313,7 @@ namespace ResxFinder.Model
                                             int lineNo,
                                             int colNo,
                                             List<StringResource> stringResources,
-                                            Settings settings,
+                                            ISettings settings,
                                             bool isCSharp,
                                             ref bool isComment)
         {

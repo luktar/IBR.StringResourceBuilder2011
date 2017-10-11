@@ -1,4 +1,5 @@
-﻿using ResxFinder.Model;
+﻿using ResxFinder.Interfaces;
+using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace ResxFinder.Views
       InitializeComponent();
     }
 
-    public SettingsWindow(Settings settings)
+    public SettingsWindow(ISettings settings)
       : this()
     {
       m_Settings = settings;
@@ -50,8 +51,8 @@ namespace ResxFinder.Views
       this.lstIgnoreArguments.IsEnabled  = !m_Settings.IgnoreMethodsArguments.Contains("@@@disabled@@@");
     }
 
-    private Settings m_Settings;
-    public Settings Settings
+    private ISettings m_Settings;
+    public ISettings Settings
     {
       get { return (m_Settings); }
       //set { m_Settings = value; }
