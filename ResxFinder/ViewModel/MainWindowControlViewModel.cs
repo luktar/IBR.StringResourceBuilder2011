@@ -9,28 +9,28 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
 using System.Linq;
+using GalaSoft.MvvmLight.Messaging;
+using ResxFinder.Messages;
 
 namespace ResxFinder.ViewModel
 {
     public class MainWindowControlViewModel : ViewModelBase
     {
-        private bool? areAllSelected;
+        private bool? isChecked;
 
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
-        //public bool? AreAllSelected
-        //{
-        //    get { return AreAllSelected; }
-        //    set
-        //    {
-        //        areAllSelected = value;
+        public bool? IsChecked
+        {
+            get { return isChecked; }
+            set
+            {
+                isChecked = value;
+                RaisePropertyChanged(nameof(IsChecked));
+            }
+        }
 
-                
-
-        //        RaisePropertyChanged(
-        //            nameof(AreAllSelected));
-        //    }
-        //}
+        public RelayCommand IsCheckedCommand { get; private set; }
 
         public RelayCommand PropertiesCommand { get; private set; }
 
@@ -45,12 +45,60 @@ namespace ResxFinder.ViewModel
 
         public MainWindowControlViewModel()
         {
+            IsChecked = false;
+
             PropertiesCommand = new RelayCommand(PropertiesPressed);
             RunCommand = new RelayCommand(RunPressed);
             MoveToResourcesCommand = new RelayCommand(MoveToResourcesPressed, CanMoveToResources);
+            IsCheckedCommand = new RelayCommand(IsCheckedPressed, IsCheckedEnabled);
 
             DocumentsManager = ViewModelLocator.Instance.GetInstance<IDocumentsManager>();
+
+            Messenger.Default.Register<UpdateTopCheckboxesMessage>(this, UpdateCheckboxes);
         }
+
+        #region Checkbox selection
+
+        private bool IsCheckedEnabled()
+        {
+            return Parsers.Count > 0;
+        }
+
+        private void IsCheckedPressed()
+        {
+            if (!IsChecked.HasValue) return;
+            UpdateChildsSelection(IsChecked.Value);
+        }
+
+        private void UpdateCheckboxes(UpdateTopCheckboxesMessage message)
+        {
+            try
+            {
+                IsChecked = GetSelectionState();
+
+            } catch(Exception e)
+            {
+                logger.Warn(e, $"Problem with selection parsers from top level.");
+            }
+        }
+
+        private bool? GetSelectionState()
+        {
+            List<ParserViewModel> parsers = Parsers.ToList();
+            if (parsers.All(x => x.IsChecked == true)) return true;
+            if (parsers.All(x => x.IsChecked == false)) return false;
+            return null;
+        }
+
+        private void UpdateChildsSelection(bool value)
+        {
+            Parsers.ToList().ForEach(x => {
+                x.IsChecked = value;
+                x.UpdateChildsSelection(value);
+            });
+        }
+
+        # endregion
 
         private bool CanMoveToResources()
         {
@@ -116,12 +164,28 @@ namespace ResxFinder.ViewModel
                     Parsers.Add(new ParserViewModel(x, DocumentsManager));
                 });
 
+                UpdateSelection();
+
                 MoveToResourcesCommand.RaiseCanExecuteChanged();
             } catch (Exception e)
             {
                 logger.Error(e, 
                     $"An error occurred while parsing all projects in solution. File name: {currentParserName}.");
             }
+        }
+
+        private void UpdateSelection()
+        {
+            if (Parsers.Count > 0)
+            {
+                IsChecked = true;
+                UpdateChildsSelection(true);
+            }
+            else
+            {
+                IsChecked = false;
+            }
+            IsCheckedCommand.RaiseCanExecuteChanged();
         }
 
         private void PropertiesPressed()
@@ -134,35 +198,5 @@ namespace ResxFinder.ViewModel
                 settings.Save();
             }
         }   
-        
-        //private void UpdateCheckBoxes()
-        //{
-        //    if(AreAllStringResourcesChecked())
-        //    {
-        //        AreAllSelected = true;
-        //        return;
-        //    }
-
-        //    if (AreAllStringResourcesUnchecked())
-        //    {
-        //        AreAllSelected = false;
-        //        return;
-        //    }
-        //    AreAllSelected = null;
-        //}
-
-        private bool AreAllStringResourcesUnchecked()
-        {
-            return Parsers.ToList().Any(
-                _parser => _parser.StringResources.Any(
-                    _resource => _resource.IsChecked));
-        }
-
-        private bool AreAllStringResourcesChecked()
-        {
-            return Parsers.ToList().Any(
-                _parser => _parser.StringResources.Any(
-                    _resource => !_resource.IsChecked));
-        }
     }
 }

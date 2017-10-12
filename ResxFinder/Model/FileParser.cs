@@ -161,7 +161,7 @@ namespace ResxFinder.Model
         /// <param name="isCSharp">If set to <c>true</c> it is CSharp code.</param>
         /// <param name="startLine">The start line.</param>
         /// <param name="endLine">The end line.</param>
-        private static void ParseForStrings(CodeElement element,
+        private void ParseForStrings(CodeElement element,
                                         List<StringResource> stringResources,
                                         bool isCSharp,
                                         ISettings settings,
@@ -192,14 +192,14 @@ namespace ResxFinder.Model
             }
         }
 
-        private static void AnalyzeCalssOrStructure(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
+        private void AnalyzeCalssOrStructure(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
         {
             CodeElements elements = (element as CodeType).Members;
             foreach (CodeElement subElement in elements)
                 ParseForStrings(subElement, stringResources, isCSharp, settings, startLine, endLine);
         }
 
-        private static void AnalyzeNamespace(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
+        private void AnalyzeNamespace(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
         {
             CodeElements elements = (element as CodeNamespace).Members;
 
@@ -207,7 +207,7 @@ namespace ResxFinder.Model
                 ParseForStrings(subElement, stringResources, isCSharp, settings, startLine, endLine);
         }
 
-        private static void AnalyzeProperty(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
+        private void AnalyzeProperty(CodeElement element, List<StringResource> stringResources, bool isCSharp, ISettings settings, int startLine, int endLine)
         {
             CodeProperty prop = element as CodeProperty;
 
@@ -236,7 +236,7 @@ namespace ResxFinder.Model
         /// <param name="startLine">The start line.</param>
         /// <param name="endLine">The end line.</param>
         /// <returns>The last parsed line number or -1.</returns>
-        private static int ParseForStrings(CodeElement element,
+        private int ParseForStrings(CodeElement element,
                                            List<StringResource> stringResources,
                                            ISettings settings,
                                            bool isCSharp,
@@ -307,7 +307,7 @@ namespace ResxFinder.Model
         /// <param name="settings">The settings.</param>
         /// <param name="isCSharp">If set to <c>true</c> it is CSharp code.</param>
         /// <param name="isComment">If set to <c>true</c> it starts (in) or ends (out) with a comment.</param>
-        private static void ParseForStrings(string txtLine,
+        private void ParseForStrings(string txtLine,
                                             int lineNo,
                                             int colNo,
                                             List<StringResource> stringResources,
@@ -497,7 +497,9 @@ namespace ResxFinder.Model
                     if (char.IsDigit(name[0]))
                         name = "_" + name;
 
-                    stringResources.Add(new StringResource(name, draftName, new System.Drawing.Point(lineNo, stringPos[i] + colNo - 1)));
+                    stringResources.Add(
+                        new StringResource(
+                            this, name, draftName, new System.Drawing.Point(lineNo, stringPos[i] + colNo - 1)));
                 }
             }
         }

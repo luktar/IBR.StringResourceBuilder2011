@@ -7,38 +7,42 @@ using System.Text;
 
 namespace ResxFinder.Model
 {
-  public class StringResource
-  {
-
-    public StringResource()
+    public class StringResource
     {
-    }
+        public string Name { get; set; }
 
-    public StringResource(string name,
-                          string text,
-                          System.Drawing.Point location)
-    {
-      this.Name     = name;
-      this.Text     = text;
-      this.Location = location;
-    }
+        public string Text { get; private set; }
 
-    public string Name { get; set; }
+        private System.Drawing.Point m_Location = System.Drawing.Point.Empty;
 
-    public string Text { get; private set; }
+        public System.Drawing.Point Location { get { return (m_Location); } private set { m_Location = value; } }
 
-    private System.Drawing.Point m_Location = System.Drawing.Point.Empty;
+        public FileParser Parent {get; private set;}
 
-    public System.Drawing.Point Location { get { return (m_Location); } private set { m_Location = value; } }
+        public StringResource()
+        {
+        }
 
-    public void Offset(int lineOffset,
-                       int columnOffset)
-    {
-      if ((lineOffset == 0) && (columnOffset == 0))
-        return;
+        public StringResource(FileParser parent,
+            string name,
+            string text,
+            System.Drawing.Point location)
+        {
+            Parent = parent;
+            Name = name;
+            Text = text;
+            Location = location;
+        }
+
+
+        public void Offset(int lineOffset,
+                           int columnOffset)
+        {
+            if ((lineOffset == 0) && (columnOffset == 0))
+                return;
 
             m_Location.Offset(lineOffset, columnOffset);
-    }
+        }
 
         public override string ToString()
         {

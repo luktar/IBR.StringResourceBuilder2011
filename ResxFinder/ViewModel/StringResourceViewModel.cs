@@ -1,4 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using ResxFinder.Messages;
 using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
@@ -17,6 +20,8 @@ namespace ResxFinder.ViewModel
         private bool isChecked;
 
         public StringResource StringResource { get; private set; }
+
+        public RelayCommand IsCheckedCommand { get; private set; }
 
         public bool IsChecked
         {
@@ -64,6 +69,13 @@ namespace ResxFinder.ViewModel
             Name = StringResource.Name;
             Text = StringResource.Text;
             Location = StringResource.Location;
+
+            IsCheckedCommand = new RelayCommand(IsCheckedPressed);
+        }
+
+        private void IsCheckedPressed()
+        {
+            Messenger.Default.Send(new UpdateParserCheckBoxesMessage(StringResource.Parent));
         }
 
         public override string ToString()

@@ -59,6 +59,8 @@
     <Compile Include="Interfaces\IDocumentsManager.cs" />
     <Compile Include="Interfaces\IResourcesManager.cs" />
     <Compile Include="Interfaces\ISettingsHelper.cs" />
+    <Compile Include="Messages\UpdateParserCheckBoxesMessage.cs" />
+    <Compile Include="Messages\UpdateTopCheckboxesMessage.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\DocumentsManager.cs" />
     <Compile Include="Model\ImageGreyer.cs" />

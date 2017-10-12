@@ -1,8 +1,10 @@
 ﻿using EnvDTE;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using NLog;
 using ResxFinder.Interfaces;
+using ResxFinder.Messages;
 using ResxFinder.Model;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ namespace ResxFinder.ViewModel
     {
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
+        private bool? isChecked;
         private StringResourceViewModel selectedItem;
         private string fileName;
 
@@ -29,6 +32,21 @@ namespace ResxFinder.ViewModel
         public IParser Parser { get; private set; }
 
         public RelayCommand DoubleClickCommand { get; set; }
+
+        public RelayCommand IsCheckedCommand { get; set; }
+
+        public bool? IsChecked
+        {
+            get
+            {
+                return isChecked;
+            }
+            set
+            {
+                isChecked = value;
+                RaisePropertyChanged(nameof(IsChecked));
+            }
+        }
 
         public string FileName
         {
@@ -67,7 +85,50 @@ namespace ResxFinder.ViewModel
             CollectionView = CollectionViewSource.GetDefaultView(StringResources);
 
             DoubleClickCommand = new RelayCommand(DoubleClickPressed);
+            IsCheckedCommand = new RelayCommand(IsCheckedPressed);
+
+            Messenger.Default.Register<UpdateParserCheckBoxesMessage>(this, UpdateCheckBoxes);
         }
+
+        #region Checkbox selection
+
+        private void IsCheckedPressed()
+        {
+            if (!IsChecked.HasValue) return;
+            UpdateChildsSelection(IsChecked.Value);
+            Messenger.Default.Send(new UpdateTopCheckboxesMessage());
+        }
+
+        private void UpdateCheckBoxes(UpdateParserCheckBoxesMessage message)
+        {
+            try
+            {
+                if (!Parser.Equals(message.Parser)) return;
+
+                IsChecked = GetSelectionState();
+
+                Messenger.Default.Send(new UpdateTopCheckboxesMessage());
+            } catch(Exception e)
+            {
+                logger.Warn(e, $"Unable to refresh selection for file parser: {FileName}.");
+            }
+        }
+
+        private bool? GetSelectionState()
+        {
+            List<StringResourceViewModel> stringResources = StringResources.ToList();
+
+            if (stringResources.All(x => x.IsChecked)) return true;
+            if (stringResources.All(x => !x.IsChecked)) return false;
+            return null;
+        }
+
+        public void UpdateChildsSelection(bool isChecked)
+        {
+            StringResources.ForEach(x => x.IsChecked = isChecked);
+        }
+
+        # endregion
 
         private void DoubleClickPressed()
         {
