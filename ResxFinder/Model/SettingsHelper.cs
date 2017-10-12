@@ -15,27 +15,18 @@ namespace ResxFinder.Model
         private bool isFileReadOnly;
         private ISettings settings;
 
-        private static SettingsHelper instance;
-
-        public ISettings Settings { get
+        public ISettings Settings {
+            get
             {
                 settings = GetSettings();
                 return settings;
             }
         }
 
-        public static SettingsHelper Instance
-        {
-            get {
-                instance = instance ?? new SettingsHelper();
-                return instance;
-            }
-        }
-
         /// <summary>
         /// Singleton constructor.
         /// </summary>
-        private SettingsHelper() { }
+        public SettingsHelper() { }
 
         public void Save()
         {

@@ -12,6 +12,8 @@ using Microsoft.Win32;
 using EnvDTE80;
 using EnvDTE;
 using ResxFinder.ViewModel;
+using System.IO;
+using System.Reflection;
 
 namespace ResxFinder
 {
@@ -66,12 +68,36 @@ namespace ResxFinder
         /// </summary>
         protected override void Initialize()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+
             ApplicationObject = GetService(typeof(DTE)) as DTE2;
 
 
             StartMenuItem.Initialize(this);
             base.Initialize();
             MainWindowCommand.Initialize(this);
+        }
+
+        /// <summary>
+        /// https://social.msdn.microsoft.com/Forums/vstudio/en-US/5f158826-2849-46ee-b669-1668d938a419/trying-to-load-systemwindowsinteractivity-for-a-vspackage-toolwindow?forum=vsx
+        /// http://geekswithblogs.net/onlyutkarsh/archive/2013/06/02/loading-custom-assemblies-in-visual-studio-extensions-again.aspx
+        /// https://stackoverflow.com/questions/52797/how-do-i-get-the-path-of-the-assembly-the-code-is-in
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.Contains("System.Windows.Interactivity"))
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                string assemblyDirectory = Path.GetDirectoryName(path);
+
+                return Assembly.LoadFrom(Path.Combine(assemblyDirectory, "System.Windows.Interactivity.dll"));
+            }
+            return null;
         }
 
         #endregion

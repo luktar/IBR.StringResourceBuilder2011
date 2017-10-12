@@ -3,11 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:behaviors="clr-namespace:ResxFinder.Behaviors"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Background="White">
     <StackPanel Orientation="Vertical">
-        <TextBlock Text="{Binding FileName}" Foreground="Black"/>
+        <StackPanel>
+            <CheckBox IsChecked="{Binding AreAllSelected}" />
+            <TextBlock Text="{Binding FileName}" Foreground="Black" FontSize="15" />
+        </StackPanel>
         <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CollectionView}"  IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}">
+            <i:Interaction.Behaviors>
+                <behaviors:DataGridGotFocusBehavior/>
+            </i:Interaction.Behaviors>
             <DataGrid.InputBindings>
                 <MouseBinding
                     MouseAction="LeftDoubleClick"
@@ -15,7 +23,7 @@
                     CommandParameter="{Binding CollectionView/}"/>
             </DataGrid.InputBindings>
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="Replace" Binding="{Binding IsChecked}"/>
+                <DataGridCheckBoxColumn Header="Replace" Binding="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Text" Binding="{Binding Text}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Location" Binding="{Binding Location}" IsReadOnly="True"/>

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio;
 using NLog;
 using ResxFinder.Interfaces;
+using ResxFinder.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,8 +68,10 @@ namespace ResxFinder.Model
 
                     if (textDocument == null) return;
 
+                    ISettingsHelper settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>();
+
                     Parser parser =
-                        new Parser(projectItem, SettingsHelper.Instance.Settings, StartMenuItemPackage.ApplicationObject);
+                        new Parser(projectItem, settings.Settings);
                     bool result = parser.Start(textDocument.StartPoint, textDocument.EndPoint, textDocument.EndPoint.Line);
 
                     if(!wasOpen)

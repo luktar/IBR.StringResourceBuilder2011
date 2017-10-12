@@ -14,8 +14,8 @@ namespace ResxFinder.Model
 
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
-        private DTE2 dte;   
         private ISettings m_Settings;
+
         private bool isCsharp;
         public ProjectItem ProjectItem { get; private set; }
 
@@ -24,13 +24,11 @@ namespace ResxFinder.Model
         public List<StringResource> StringResources { get; private set; } = new List<StringResource>();
 
         public Parser(ProjectItem projectItem,
-                            ISettings settings,
-                            DTE2 dte)
+                            ISettings settings)
         {
             this.ProjectItem = projectItem;
             isCsharp = true;
             FileName = projectItem.Properties.Item(FULL_PATH).Value.ToString();
-            this.dte = dte;
             m_Settings = settings;
         }
 

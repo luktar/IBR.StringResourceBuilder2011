@@ -14,7 +14,23 @@ namespace ResxFinder.ViewModel
 {
     public class MainWindowControlViewModel : ViewModelBase
     {
+        private bool? areAllSelected;
+
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
+
+        //public bool? AreAllSelected
+        //{
+        //    get { return AreAllSelected; }
+        //    set
+        //    {
+        //        areAllSelected = value;
+
+                
+
+        //        RaisePropertyChanged(
+        //            nameof(AreAllSelected));
+        //    }
+        //}
 
         public RelayCommand PropertiesCommand { get; private set; }
 
@@ -54,8 +70,10 @@ namespace ResxFinder.ViewModel
                 {
                     projectFileName = x.FileName;
 
+                    ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
+
                     IResourcesManager resourceManager = new ResourcesManager(
-                        SettingsHelper.Instance.Settings, x.Parser.ProjectItem, DocumentsManager);
+                        settings, x.Parser.ProjectItem, DocumentsManager);
 
                     x.Parser.StringResources.Reverse();
 
@@ -108,11 +126,43 @@ namespace ResxFinder.ViewModel
 
         private void PropertiesPressed()
         {
-            SettingsWindow window = new SettingsWindow(SettingsHelper.Instance.Settings);
+            ISettingsHelper settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>();
+
+            SettingsWindow window = new SettingsWindow(settings.Settings);
             if (window.ShowDialog() ?? false)
             {
-                SettingsHelper.Instance.Save();
+                settings.Save();
             }
-        }     
+        }   
+        
+        //private void UpdateCheckBoxes()
+        //{
+        //    if(AreAllStringResourcesChecked())
+        //    {
+        //        AreAllSelected = true;
+        //        return;
+        //    }
+
+        //    if (AreAllStringResourcesUnchecked())
+        //    {
+        //        AreAllSelected = false;
+        //        return;
+        //    }
+        //    AreAllSelected = null;
+        //}
+
+        private bool AreAllStringResourcesUnchecked()
+        {
+            return Parsers.ToList().Any(
+                _parser => _parser.StringResources.Any(
+                    _resource => _resource.IsChecked));
+        }
+
+        private bool AreAllStringResourcesChecked()
+        {
+            return Parsers.ToList().Any(
+                _parser => _parser.StringResources.Any(
+                    _resource => !_resource.IsChecked));
+        }
     }
 }

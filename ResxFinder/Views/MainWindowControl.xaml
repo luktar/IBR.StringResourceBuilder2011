@@ -9,11 +9,12 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
-    <Grid>
+    <Grid Background="LightGray">
         <DockPanel LastChildFill="True" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
 >
-                <Button DockPanel.Dock="Left" Content="Properties" Command="{Binding PropertiesCommand}"/>
+                <CheckBox VerticalAlignment="Center" DockPanel.Dock="Left" Content="Select all" IsChecked="{Binding AreAllSelected}"/>
+                <Button Margin="5 0 0 0" DockPanel.Dock="Left" Content="Properties" Command="{Binding PropertiesCommand}"/>
                 <Button DockPanel.Dock="Right" Content="Move to resources" Command="{Binding MoveToResourcesCommand}"/>
                 <Button DockPanel.Dock="Right" Content="Run!" Command="{Binding RunCommand}"/>
                 

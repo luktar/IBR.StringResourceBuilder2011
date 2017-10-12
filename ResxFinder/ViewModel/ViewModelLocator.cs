@@ -39,6 +39,7 @@ namespace ResxFinder.ViewModel
             }
             else
             {
+                SimpleIoc.Default.Register<ISettingsHelper, SettingsHelper>();
                 SimpleIoc.Default.Register<ISolutionHelper, SolutionHelper>();
                 SimpleIoc.Default.Register<ISolutionProjectsHelper, SolutionProjectsHelper>();
                 SimpleIoc.Default.Register<IParserManager, ParserManager>();
