@@ -8,7 +8,7 @@ using ResxFinder.Interfaces;
 
 namespace ResxFinder.Model
 {
-    public class Parser : IParser
+    public class FileParser : IParser
     {
         private const string FULL_PATH = "FullPath";
 
@@ -23,7 +23,7 @@ namespace ResxFinder.Model
 
         public List<StringResource> StringResources { get; private set; } = new List<StringResource>();
 
-        public Parser(ProjectItem projectItem,
+        public FileParser(ProjectItem projectItem,
                             ISettings settings)
         {
             this.ProjectItem = projectItem;

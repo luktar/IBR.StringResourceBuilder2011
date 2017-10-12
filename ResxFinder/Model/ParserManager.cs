@@ -70,8 +70,8 @@ namespace ResxFinder.Model
 
                     ISettingsHelper settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>();
 
-                    Parser parser =
-                        new Parser(projectItem, settings.Settings);
+                    FileParser parser =
+                        new FileParser(projectItem, settings.Settings);
                     bool result = parser.Start(textDocument.StartPoint, textDocument.EndPoint, textDocument.EndPoint.Line);
 
                     if(!wasOpen)

@@ -72,7 +72,7 @@
     <Compile Include="Model\Util.cs" />
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\Settings.cs" />
-    <Compile Include="Model\Parser.cs" />
+    <Compile Include="Model\FileParser.cs" />
     <Compile Include="Model\SettingsHelper.cs" />
     <Compile Include="Model\StringResource.cs" />
     <Compile Include="CustomControls\NumericUpDown.cs" />
