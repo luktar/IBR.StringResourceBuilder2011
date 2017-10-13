@@ -32,12 +32,21 @@ namespace ResxFinder.Model
             m_Settings = settings;
         }
 
-        public bool Start(TextPoint startPoint,
-                                     TextPoint endPoint,
-                                     int lastDocumentLength)
+        public bool Start()
         {
             try
             {
+                if (!ProjectItem.IsOpen)
+                {
+                    ProjectItem.Open();
+                }
+
+                Document document = ProjectItem.Document;
+                TextDocument textDocument = document.Object(Constants.TEXT_DOCUMENT) as TextDocument;
+                TextPoint startPoint = textDocument.StartPoint;
+                TextPoint endPoint = textDocument.EndPoint;
+                int lastDocumentLength = textDocument.EndPoint.Line;
+
                 logger.Debug("Start - parsing document: " + FileName);
 
                 List<StringResource> stringResources = new List<StringResource>();

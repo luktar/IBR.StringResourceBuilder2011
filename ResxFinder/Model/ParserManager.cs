@@ -72,7 +72,7 @@ namespace ResxFinder.Model
 
                     FileParser parser =
                         new FileParser(projectItem, settings.Settings);
-                    bool result = parser.Start(textDocument.StartPoint, textDocument.EndPoint, textDocument.EndPoint.Line);
+                    bool result = parser.Start();
 
                     if(!wasOpen)
                         document.Close();

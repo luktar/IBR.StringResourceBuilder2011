@@ -55,6 +55,7 @@ namespace ResxFinder.ViewModel
             DocumentsManager = ViewModelLocator.Instance.GetInstance<IDocumentsManager>();
 
             Messenger.Default.Register<UpdateTopCheckboxesMessage>(this, UpdateCheckboxes);
+            Messenger.Default.Register<UpdateParsersMessage>(this, UpdateParsers);
         }
 
         #region Checkbox selection
@@ -114,24 +115,28 @@ namespace ResxFinder.ViewModel
 
             try
             {
+                ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
+
                 Parsers.ToList().ForEach(x =>
                 {
                     projectFileName = x.FileName;
 
-                    ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
-
                     IResourcesManager resourceManager = new ResourcesManager(
                         settings, x.Parser.ProjectItem, DocumentsManager);
 
-                    x.Parser.StringResources.Reverse();
+                    List<StringResourceViewModel> stringResources = x.StringResources.ToList();
+                    stringResources.Reverse();
 
-                    x.Parser.StringResources.ForEach(y =>
+                    stringResources.ForEach(y =>
                     {
-                        currentStringResource = y.ToString();
-
-                        resourceManager.WriteToResource(y);
-                  
+                        if (y.IsChecked)
+                        {
+                            currentStringResource = y.StringResource.ToString();
+                            resourceManager.WriteToResource(y.StringResource);
+                        }
+                        
                     });
+
                     resourceManager.InsertNamespace();
 
                 });
@@ -165,7 +170,6 @@ namespace ResxFinder.ViewModel
                 });
 
                 UpdateSelection();
-
                 MoveToResourcesCommand.RaiseCanExecuteChanged();
             } catch (Exception e)
             {
@@ -197,6 +201,16 @@ namespace ResxFinder.ViewModel
             {
                 settings.Save();
             }
-        }   
+        } 
+        
+        private void UpdateParsers(UpdateParsersMessage parserMessage)
+        {
+            List<ParserViewModel> parsersToRemove = Parsers.Where(x => x.StringResources.Count == 0).ToList();
+            parsersToRemove.ForEach(x => Parsers.Remove(x));
+
+            IsChecked = GetSelectionState();
+            MoveToResourcesCommand.RaiseCanExecuteChanged();
+
+        }
     }
 }

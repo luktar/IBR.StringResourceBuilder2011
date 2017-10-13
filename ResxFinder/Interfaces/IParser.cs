@@ -13,6 +13,6 @@ namespace ResxFinder.Interfaces
         ProjectItem ProjectItem { get; }
         string FileName { get; }
         List<StringResource> StringResources { get; }
-        bool Start(TextPoint startPoint, TextPoint endPoint, int lastDocumentLength);
+        bool Start();
     }
 }

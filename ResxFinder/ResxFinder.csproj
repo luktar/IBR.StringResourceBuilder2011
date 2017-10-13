@@ -60,6 +60,7 @@
     <Compile Include="Interfaces\IResourcesManager.cs" />
     <Compile Include="Interfaces\ISettingsHelper.cs" />
     <Compile Include="Messages\UpdateParserCheckBoxesMessage.cs" />
+    <Compile Include="Messages\UpdateParsersMessage.cs" />
     <Compile Include="Messages\UpdateTopCheckboxesMessage.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\DocumentsManager.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Model\SettingsHelper.cs" />
     <Compile Include="Model\StringResource.cs" />
     <Compile Include="CustomControls\NumericUpDown.cs" />
-    <Compile Include="Design\DesignParser.cs" />
     <Compile Include="Interfaces\IParser.cs" />
     <Compile Include="Interfaces\IParserServiceProvider.cs" />
     <Compile Include="Interfaces\ISolutionHelper.cs" />
@@ -282,7 +282,9 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Design\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.9\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.9\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets')" />

@@ -35,6 +35,8 @@ namespace ResxFinder.ViewModel
 
         public RelayCommand IsCheckedCommand { get; set; }
 
+        public RelayCommand RefreshCommand { get; set; }
+
         public bool? IsChecked
         {
             get
@@ -71,8 +73,8 @@ namespace ResxFinder.ViewModel
             }
         }
 
-        public List<StringResourceViewModel> StringResources { get; set; } = 
-            new List<StringResourceViewModel>();
+        public ObservableCollection<StringResourceViewModel> StringResources { get; set; } = 
+            new ObservableCollection<StringResourceViewModel>();
 
         public ParserViewModel(IParser parser, IDocumentsManager documentsManager)
         {
@@ -86,8 +88,24 @@ namespace ResxFinder.ViewModel
 
             DoubleClickCommand = new RelayCommand(DoubleClickPressed);
             IsCheckedCommand = new RelayCommand(IsCheckedPressed);
+            RefreshCommand = new RelayCommand(RefreshPressed);
 
             Messenger.Default.Register<UpdateParserCheckBoxesMessage>(this, UpdateCheckBoxes);
+        }
+
+        private void RefreshPressed()
+        {
+            StringResources.Clear();
+
+            Parser.Start();
+
+            if (Parser.StringResources.Count > 0)
+                Parser.StringResources.ForEach(x => StringResources.Add(
+                    new StringResourceViewModel(x)));
+
+            UpdateCheckBoxes();
+
+            Messenger.Default.Send(new UpdateParsersMessage());
         }
 
         #region Checkbox selection
@@ -104,18 +122,24 @@ namespace ResxFinder.ViewModel
             try
             {
                 if (!Parser.Equals(message.Parser)) return;
+                UpdateCheckBoxes();
 
-                IsChecked = GetSelectionState();
-
-                Messenger.Default.Send(new UpdateTopCheckboxesMessage());
             } catch(Exception e)
             {
                 logger.Warn(e, $"Unable to refresh selection for file parser: {FileName}.");
             }
         }
 
+        private void UpdateCheckBoxes()
+        {
+            IsChecked = GetSelectionState();
+            Messenger.Default.Send(new UpdateTopCheckboxesMessage());
+        }
+
         private bool? GetSelectionState()
         {
+            if (StringResources.Count == 0) return false;
+
             List<StringResourceViewModel> stringResources = StringResources.ToList();
 
             if (stringResources.All(x => x.IsChecked)) return true;
@@ -123,9 +147,9 @@ namespace ResxFinder.ViewModel
             return null;
         }
 
-        public void UpdateChildsSelection(bool isChecked)
+        public void UpdateChildsSelection(bool value)
         {
-            StringResources.ForEach(x => x.IsChecked = isChecked);
+            StringResources.ToList().ForEach(x => x.IsChecked = value);
         }
 
         # endregion

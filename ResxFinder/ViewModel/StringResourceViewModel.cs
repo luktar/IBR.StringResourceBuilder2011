@@ -64,6 +64,7 @@ namespace ResxFinder.ViewModel
 
         public StringResourceViewModel(StringResource stringResource)
         {
+            IsChecked = true;
             StringResource = stringResource;
 
             Name = StringResource.Name;

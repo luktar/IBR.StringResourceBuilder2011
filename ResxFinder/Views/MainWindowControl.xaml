@@ -10,22 +10,24 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
     <Grid Background="LightGray">
-        <DockPanel LastChildFill="True" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
+        <DockPanel Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" HorizontalAlignment="Stretch"
 >
                 <CheckBox Command="{Binding IsCheckedCommand}" Margin="5 0 5 0" VerticalAlignment="Center" DockPanel.Dock="Left" IsChecked="{Binding IsChecked}"/>
-                <Button DockPanel.Dock="Left" Content="Properties" Command="{Binding PropertiesCommand}"/>
-                <Button DockPanel.Dock="Right" Content="Move to resources" Command="{Binding MoveToResourcesCommand}"/>
-                <Button DockPanel.Dock="Right" Content="Run!" Command="{Binding RunCommand}"/>
+                <Button Content="Parse solution" Command="{Binding RunCommand}"/>
+                <Button Content="Move to resources" Command="{Binding MoveToResourcesCommand}"/>
+                <Button Content="Properties" Command="{Binding PropertiesCommand}"/>
                 
-            </DockPanel>
-            <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Parsers}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <views:ParserView/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            </StackPanel>
+            <ScrollViewer>
+                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Parsers}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:ParserView/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </DockPanel>
     </Grid>
 </UserControl>
