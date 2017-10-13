@@ -81,7 +81,7 @@ namespace ResxFinder.ViewModel
 
         public override string ToString()
         {
-            return Name ?? "Unknown name" + ", " + Text ?? "Unknown text.";
+            return Name ?? "Unknown name" + ", " + Text ?? "Unknown text." + ", location: " + Location;
         }
     }
 }

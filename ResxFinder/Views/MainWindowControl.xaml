@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ResxFinder.Views"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:behaviors="clr-namespace:ResxFinder.Behaviors"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -20,6 +22,9 @@
                 
             </StackPanel>
             <ScrollViewer>
+                <i:Interaction.Behaviors>
+                    <behaviors:MouseWheelBehavior/>
+                </i:Interaction.Behaviors>
                 <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Parsers}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

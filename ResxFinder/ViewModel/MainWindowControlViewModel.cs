@@ -132,7 +132,14 @@ namespace ResxFinder.ViewModel
                         if (y.IsChecked)
                         {
                             currentStringResource = y.StringResource.ToString();
-                            resourceManager.WriteToResource(y.StringResource);
+
+                            try
+                            {
+                                resourceManager.WriteToResource(y.StringResource);
+                            } catch(Exception e)
+                            {
+                                logger.Warn(e, $"Problem with writing string to resource. Resource details: {currentStringResource}.");
+                            }
                         }
                         
                     });

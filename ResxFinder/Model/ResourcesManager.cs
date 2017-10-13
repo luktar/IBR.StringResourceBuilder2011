@@ -298,8 +298,9 @@ namespace ResxFinder.Model
             }
             catch (Exception e)
             {
-                logger.Error($"Unable write string to resource file. File: {ProjectItemFileName}, resource: {stringResource}.");
-                throw e;
+                string logMessage = $"Unable write string to resource file. File: {ProjectItemFileName}, resource: {stringResource}.";
+                logger.Error(logMessage);
+                throw new Exception(logMessage, e);
             }
         }
 

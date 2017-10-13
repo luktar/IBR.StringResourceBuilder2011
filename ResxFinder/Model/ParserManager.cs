@@ -23,15 +23,25 @@ namespace ResxFinder.Model
             try
             {
                 Parsers.Clear();
-                projects.ForEach(x => {
-                    currentProjectName = x.FullName;
-                    AnalyzeProjectItems(x.ProjectItems);
-                });
+
+                foreach(Project project in projects)
+                {
+                    currentProjectName = project.Name;
+                    try
+                    {
+                        AnalyzeProjectItems(project.ProjectItems);
+                    } catch (Exception e)
+                    {
+                        logger.Warn(e, $"An error occurred while analyzing project: " + currentProjectName);
+                    }
+                }
+
                 return Parsers;
-            } catch
+            } catch (Exception e)
             {
-                logger.Warn("An error occurred while parsing project: " + currentProjectName);
-                throw;
+                string logMessage = "An error occurred while parsing project: " + currentProjectName;
+                logger.Warn(logMessage);
+                throw new Exception(logMessage, e);
             }
         }
 
