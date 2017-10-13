@@ -3,6 +3,7 @@ using EnvDTE80;
 using NLog;
 using ResxFinder.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -389,6 +390,32 @@ namespace ResxFinder.Model
             insertPoint.Insert(alias);
         }
 
+        private bool ResourcesContinsKey(string resourceFileName, string key)
+        {
+            System.Resources.ResXResourceReader rsxr = null;
+            try
+            {
+                rsxr = new System.Resources.ResXResourceReader(resourceFileName);
+                System.Collections.DictionaryEntry d = default(System.Collections.DictionaryEntry);
+                foreach (DictionaryEntry d_loopVariable in rsxr)
+                {
+                    if (d_loopVariable.Key.ToString().ToLower().Equals(key.ToLower())) return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                string logMessage = $"Unable to find key {key} in resource file: {resourceFileName}.";
+                logger.Warn(logMessage);
+                throw new Exception(logMessage, e);
+            }
+            finally
+            {
+                if(rsxr != null)
+                    rsxr.Close();
+            }
+        }
+
         private bool AppendStringResource(string resxFileName,
                                   string name,
                                   string value,
@@ -403,11 +430,9 @@ namespace ResxFinder.Model
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(resxFileName);
 
-                string xmlPath = $"descendant::data[(attribute::name='{name}')]/descendant::value";
-                XmlNode xmlNode = xmlDoc.DocumentElement.SelectSingleNode(xmlPath);
-                if (xmlNode != null)
+                if (ResourcesContinsKey(resxFileName, name))
                 {
-                    logger.Debug($"Replacing existing string exists: {name} = '{xmlNode.InnerText}' (new string is '{value}')");
+                    logger.Debug($"Replacing existing string exists: {name} (new string is '{value}')");
                     return true;
                 }
 
