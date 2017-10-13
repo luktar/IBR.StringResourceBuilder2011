@@ -5,6 +5,8 @@ using EnvDTE;
 using EnvDTE80;
 using NLog;
 using ResxFinder.Interfaces;
+using System.IO;
+using ResxFinder.Model.CodeHelpers;
 
 namespace ResxFinder.Model
 {
@@ -53,12 +55,12 @@ namespace ResxFinder.Model
 
                 bool isFullDocument = startPoint.AtStartOfDocument && endPoint.AtEndOfDocument,
                      isTextWithStringLiteral = true;
-                int startLine = startPoint.Line,
-                    startCol = startPoint.LineCharOffset,
-                    endLine = endPoint.Line,
-                    endCol = endPoint.LineCharOffset,
-                    documentLength = endPoint.Parent.EndPoint.Line,
-                    insertIndex = 0;
+                int startLine = startPoint.Line;
+                int startCol = startPoint.LineCharOffset;
+                int endLine = endPoint.Line;
+                int endCol = endPoint.LineCharOffset;
+                int documentLength = endPoint.Parent.EndPoint.Line;
+                int insertIndex = 0;
 
                 if (isFullDocument)
                     StringResources.Clear();
@@ -252,9 +254,8 @@ namespace ResxFinder.Model
                                            int startLine,
                                            int endLine)
         {
-            TextPoint startPoint = element.StartPoint,
-                       endPoint = element.EndPoint;
-            EditPoint2 editPoint = null;
+            TextPoint startPoint = element.StartPoint;
+            TextPoint endPoint = element.EndPoint;
 
             try
             {
@@ -272,33 +273,23 @@ namespace ResxFinder.Model
                     }
                 }
 
-                editPoint = startPoint.CreateEditPoint() as EditPoint2;
+                EditPoint2 editPoint = startPoint.CreateEditPoint() as EditPoint2;
 
-                int editLine = editPoint.Line,
-                         editColumn = editPoint.LineCharOffset;
+                int editLine = editPoint.Line;
+                int editColumn = editPoint.LineCharOffset;
                 string text = editPoint.GetText(endPoint);
 
-                if (text.Contains("@\"")) return -1;
-                if (text.ToLower().Contains("string const")) return -1;
+                List<CodeTextElement> codeTextelements = CodeTools.GetCodeElements(editLine, text);
+                List<CodeTextLine> textLines = CodeTools.GetFilteredLines(
+                    codeTextelements, new List<string>()
+                    {
+                        "@\"", "string const", "String const"
+                    });
 
-                string[] txtLines = text.Replace("\r", string.Empty).Split('\n');
                 bool isComment = false;
 
-                foreach (string txtLine in txtLines)
-                {
-                    if ((editLine >= startLine) && (editLine <= endLine))
-                    {
-                        //this is a changed text line in the block
-                        if (txtLine.Contains("\""))
-                            ParseForStrings(txtLine, editLine, editColumn, stringResources, settings, isCSharp, ref isComment);
-                    }
-
-                    ++editLine;
-
-                    //only for the first line of the text block LineCharOffset will be used
-                    if (editColumn > 1)
-                        editColumn = 1;
-                }
+                FindStringsInCodeBlock(
+                    textLines, editColumn, startLine, endLine, stringResources, settings, ref isComment);
             }
             catch (Exception ex)
             {
@@ -308,6 +299,32 @@ namespace ResxFinder.Model
             return (endPoint?.Line ?? (-1));
         }
 
+        private void FindStringsInCodeBlock(
+            List<CodeTextLine> codeLines,
+            int editColumn,
+            int startLine,
+            int endLine,
+            List<StringResource> stringResources,
+            ISettings settings,
+            ref bool isComment)
+        {
+            foreach (CodeTextLine txtLine in codeLines)
+            {
+                if ((txtLine.LineNumber >= startLine) && (txtLine.LineNumber <= endLine))
+                {
+                    //this is a changed text line in the block
+                    if (txtLine.LineText.Contains("\""))
+                        ParseTextLine(txtLine.LineText, txtLine.LineNumber, editColumn, stringResources, settings, true, ref isComment);
+                }
+
+                //only for the first line of the text block LineCharOffset will be used
+                if (editColumn > 1)
+                    editColumn = 1;
+            }
+        }
+
+
+
         /// <summary>Parses for strings by iterating through the parts between double quotes.</summary>
         /// <param name="txtLine">The text line.</param>
         /// <param name="lineNo">The line number.</param>
@@ -316,7 +333,7 @@ namespace ResxFinder.Model
         /// <param name="settings">The settings.</param>
         /// <param name="isCSharp">If set to <c>true</c> it is CSharp code.</param>
         /// <param name="isComment">If set to <c>true</c> it starts (in) or ends (out) with a comment.</param>
-        private void ParseForStrings(string txtLine,
+        private void ParseTextLine(string txtLine,
                                             int lineNo,
                                             int colNo,
                                             List<StringResource> stringResources,

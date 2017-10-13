@@ -49,11 +49,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Program.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="UtilsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResxFinder\ResxFinder.csproj">
+      <Project>{c7f0fc18-d272-48d4-b8fb-168123938070}</Project>
+      <Name>ResxFinder</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
