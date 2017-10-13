@@ -53,7 +53,7 @@ namespace ResxFinder.Model
       set { m_IgnoreStringLength = value; }
     }
 
-    private bool m_IsUseGlobalResourceFile;
+    private bool m_IsUseGlobalResourceFile = true;
     public bool IsUseGlobalResourceFile
     {
       get { return (m_IsUseGlobalResourceFile); }

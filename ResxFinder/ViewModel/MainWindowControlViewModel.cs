@@ -117,14 +117,16 @@ namespace ResxFinder.ViewModel
             {
                 ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
 
-                Parsers.ToList().ForEach(x =>
+                foreach(ParserViewModel parser in Parsers.ToList())
                 {
-                    projectFileName = x.FileName;
+                    if (parser.IsChecked == false) continue;
+
+                    projectFileName = parser.FileName;
 
                     IResourcesManager resourceManager = new ResourcesManager(
-                        settings, x.Parser.ProjectItem, DocumentsManager);
+                        settings, parser.Parser.ProjectItem, DocumentsManager);
 
-                    List<StringResourceViewModel> stringResources = x.StringResources.ToList();
+                    List<StringResourceViewModel> stringResources = parser.StringResources.ToList();
                     stringResources.Reverse();
 
                     stringResources.ForEach(y =>
@@ -146,7 +148,7 @@ namespace ResxFinder.ViewModel
 
                     resourceManager.InsertNamespace();
 
-                });
+                };
             } catch(Exception e)
             {
                 if (currentStringResource == null) currentStringResource = "Unknown";

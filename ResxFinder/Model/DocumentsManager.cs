@@ -41,12 +41,14 @@ namespace ResxFinder.Model
 
                 return document.Object(Constants.TEXT_DOCUMENT) as TextDocument;
             }
-            catch
+            catch (Exception e)
             {
+                string logMessage =
+                    "Problem with obtaining TextDocument from project item: " +
+                    projectItem.Properties.Item(Constants.FULL_PATH).Value;
                 logger.Warn(
-                    "Problem with obtaining TextDocument from project item: " + 
-                    projectItem.Properties.Item(Constants.FULL_PATH).Value);
-                throw;
+                    logMessage);
+                throw new Exception(logMessage, e);
             }
         }
 

@@ -31,8 +31,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Text" Binding="{Binding Text}" IsReadOnly="True"/>
+                <DataGridTextColumn Width="400" Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Width="500" Header="Text" Binding="{Binding Text}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Location" Binding="{Binding Location}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
