@@ -261,7 +261,7 @@ namespace ResxFinder.Model
                     value = value.Replace("\"\"", "\\\"");
 
                 //add to the resource file (checking for duplicate)
-                if (!AppendStringResource(ResxFileName, name, value, comment))
+                if (!AppendStringResource(ResxFileName, ref name, value, comment))
                     return;
 
                 CreateDesignerClass();
@@ -390,7 +390,7 @@ namespace ResxFinder.Model
             insertPoint.Insert(alias);
         }
 
-        private bool ResourcesContinsKey(string resourceFileName, string key)
+        private string GetResourceKey(string resourceFileName, string key)
         {
             System.Resources.ResXResourceReader rsxr = null;
             try
@@ -399,9 +399,9 @@ namespace ResxFinder.Model
                 System.Collections.DictionaryEntry d = default(System.Collections.DictionaryEntry);
                 foreach (DictionaryEntry d_loopVariable in rsxr)
                 {
-                    if (d_loopVariable.Key.ToString().ToLower().Equals(key.ToLower())) return true;
+                    if (d_loopVariable.Key.ToString().ToLower().Equals(key.ToLower())) return d_loopVariable.Key.ToString();
                 }
-                return false;
+                return null;
             }
             catch (Exception e)
             {
@@ -417,7 +417,7 @@ namespace ResxFinder.Model
         }
 
         private bool AppendStringResource(string resxFileName,
-                                  string name,
+                                  ref string name,
                                   string value,
                                   string comment)
         {
@@ -430,8 +430,10 @@ namespace ResxFinder.Model
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(resxFileName);
 
-                if (ResourcesContinsKey(resxFileName, name))
+                string resourceName = GetResourceKey(resxFileName, name);
+                if (resourceName != null)
                 {
+                    name = resourceName;
                     logger.Debug($"Replacing existing string exists: {name} (new string is '{value}')");
                     return true;
                 }
