@@ -12,6 +12,10 @@ namespace ResxFinder.Interfaces
         int IgnoreStringLength { get; set; }
         List<string> IgnoreStrings { get; set; }
         List<string> IgnoreSubStrings { get; set; }
+
+        List<string> IgnoredFiles { get; set; }
+
+        List<string> IgnoredProjects { get; set; }
         bool IsDontUseResourceAlias { get; set; }
         bool IsIgnoreNumberStrings { get; set; }
         bool IsIgnoreStringLength { get; set; }

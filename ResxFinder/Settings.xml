@@ -4,12 +4,30 @@
   <IsIgnoreNumberStrings>true</IsIgnoreNumberStrings>
   <IsIgnoreVerbatimStrings>false</IsIgnoreVerbatimStrings>
   <IsIgnoreStringLength>true</IsIgnoreStringLength>
-  <IgnoreStringLength>2</IgnoreStringLength>
+  <IgnoreStringLength>3</IgnoreStringLength>
   <IsUseGlobalResourceFile>true</IsUseGlobalResourceFile>
   <GlobalResourceFileName>SRB_Strings</GlobalResourceFileName>
   <IsDontUseResourceAlias>false</IsDontUseResourceAlias>
   <IgnoreStrings />
   <IgnoreSubStrings />
+  <IgnoredFiles>
+    <string>AssemblyInfo</string>
+    <string>GlobalSuppressions</string>
+    <string>Designer.cs</string>
+  </IgnoredFiles>
+  <IgnoredProjects>
+    <string>Test</string>
+  </IgnoredProjects>
   <IgnoreMethods />
+  <IgnoreRegex>
+    <string>@"</string>
+    <string>const [Ss]tring</string>
+    <string>^(\s*\[).*(\]\s*)$</string>
+    <string>Exception\(</string>
+    <string>Uri\(\".*\"</string>
+    <string>Diagnostics\.Process</string>
+    <string>Logger\.Instance</string>
+    <string>Assert\.</string>
+  </IgnoreRegex>
   <IgnoreMethodsArguments />
 </Settings>

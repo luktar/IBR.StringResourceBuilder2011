@@ -9,6 +9,6 @@ namespace ResxFinder.Interfaces
 {
     public interface ISolutionProjectsHelper
     {
-        List<Project> GetProjects();
+        List<Project> GetProjects(ISettings settings);
     }
 }

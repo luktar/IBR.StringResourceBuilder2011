@@ -120,7 +120,7 @@
                     <views:ListEditor Grid.Column="1" x:Name="lstIgnoreArguments" Header="Ignore Arguments of these Methods or Functions" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Regex ignore">
+            <TabItem Header="Code blocks">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -128,6 +128,16 @@
                     </Grid.ColumnDefinitions>
                     <views:ListEditor Grid.Column="0" x:Name="regexIgnore" Header="Ignore these regex in code block" />
                     <StackPanel Grid.Column="1" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Files and projects">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <views:ListEditor Grid.Column="0" x:Name="ignoredFiles" Header="Ignore files containing:" />
+                    <views:ListEditor Grid.Column="1" x:Name="ignoredProjects" Header="Ignore projects containing:" />
                 </Grid>
             </TabItem>
         </TabControl>

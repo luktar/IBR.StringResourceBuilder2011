@@ -90,6 +90,20 @@ namespace ResxFinder.Model
             set { m_IgnoreSubStrings = value; }
         }
 
+        private List<string> m_IgnoredFiles = new List<string>();
+        public List<string> IgnoredFiles
+        {
+            get { return (m_IgnoredFiles); }
+            set { m_IgnoredFiles = value; }
+        }
+
+        private List<string> m_IgnoredProjects = new List<string>();
+        public List<string> IgnoredProjects
+        {
+            get { return m_IgnoredProjects; }
+            set { m_IgnoredProjects = value; }
+        }
+
         private List<string> m_IgnoreMethods = new List<string>();
         public List<string> IgnoreMethods
         {

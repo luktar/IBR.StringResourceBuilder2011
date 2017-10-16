@@ -47,6 +47,8 @@ namespace ResxFinder.Model
 
         private void AnalyzeProjectItems(ProjectItems projectItems)
         {
+            ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
+
             if (projectItems == null) return;
 
             foreach (ProjectItem projectItem in projectItems)
@@ -57,16 +59,29 @@ namespace ResxFinder.Model
                     continue;
                 }
 
-                AnalyzeFile(projectItem);
+                AnalyzeFile(projectItem, settings);
             }
         }
 
-        private void AnalyzeFile(ProjectItem projectItem)
+        private bool Contains(string fileName, List<string> ignoreNames)
+        {
+            foreach(string element in ignoreNames)
+            {
+                if (fileName.Contains(element)) return true;
+            }
+
+            return false;
+        }
+
+        private void AnalyzeFile(ProjectItem projectItem, ISettings settings)
         {
             string csFilePath = String.Empty;
             try
             {
                 csFilePath = projectItem.Properties.Item(Constants.FULL_PATH).Value.ToString();
+
+                if (Contains(csFilePath, settings.IgnoredFiles)) return;
+
                 if (csFilePath.EndsWith(Constants.CS_EXTESION))
                 {
                     bool wasOpen = projectItem.IsOpen;
@@ -78,10 +93,8 @@ namespace ResxFinder.Model
 
                     if (textDocument == null) return;
 
-                    ISettingsHelper settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>();
-
                     FileParser parser =
-                        new FileParser(projectItem, settings.Settings);
+                        new FileParser(projectItem, settings);
                     bool result = parser.Start();
 
                     if(!wasOpen)

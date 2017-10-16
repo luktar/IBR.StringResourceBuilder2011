@@ -40,6 +40,9 @@ namespace ResxFinder.Views
             this.txtGlobalResourceFileName.Text = m_Settings.GlobalResourceFileName;
             this.cbDontUseResourceAlias.IsChecked = m_Settings.IsDontUseResourceAlias;
 
+            this.ignoredFiles.Items = m_Settings.IgnoredFiles;
+            this.ignoredProjects.Items = m_Settings.IgnoredProjects;
+
             this.lstIgnoreStrings.Items = m_Settings.IgnoreStrings;
             this.lstIgnoreSubStrings.Items = m_Settings.IgnoreSubStrings;
 
@@ -90,6 +93,12 @@ namespace ResxFinder.Views
             m_Settings.IsUseGlobalResourceFile = this.cbUseGlobalResourceFile.IsChecked ?? false;
             m_Settings.GlobalResourceFileName = (this.txtGlobalResourceFileName.Text ?? string.Empty).Trim();
             m_Settings.IsDontUseResourceAlias = this.cbDontUseResourceAlias.IsChecked ?? false;
+
+            m_Settings.IgnoredProjects.Clear();
+            m_Settings.IgnoredProjects.AddRange(this.ignoredProjects.Items);
+
+            m_Settings.IgnoredFiles.Clear();
+            m_Settings.IgnoredFiles.AddRange(this.ignoredFiles.Items);
 
             m_Settings.IgnoreRegex.Clear();
             m_Settings.IgnoreRegex.AddRange(this.regexIgnore.Items);

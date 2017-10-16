@@ -165,7 +165,9 @@ namespace ResxFinder.ViewModel
                 ISolutionProjectsHelper solutionProjectHelper =
                     ViewModelLocator.Instance.GetInstance<ISolutionProjectsHelper>();
 
-                List<Project> projects = solutionProjectHelper.GetProjects();
+                ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
+
+                List<Project> projects = solutionProjectHelper.GetProjects(settings);
 
                 IParserManager parserManager =
                     ViewModelLocator.Instance.GetInstance<IParserManager>();
