@@ -7,6 +7,7 @@ using NLog;
 using ResxFinder.Interfaces;
 using System.IO;
 using ResxFinder.Model.CodeHelpers;
+using ResxFinder.ViewModel;
 
 namespace ResxFinder.Model
 {
@@ -279,12 +280,10 @@ namespace ResxFinder.Model
                 int editColumn = editPoint.LineCharOffset;
                 string text = editPoint.GetText(endPoint);
 
-                List<CodeTextElement> codeTextelements = CodeTools.GetCodeElements(editLine, text);
-                List<CodeTextLine> textLines = CodeTools.GetFilteredLines(
-                    codeTextelements, new List<string>()
-                    {
-                        "@\"", "string const", "String const"
-                    });
+                ICodeTools codeTools = ViewModelLocator.Instance.GetInstance<ICodeTools>();
+                List<CodeTextElement> codeTextelements = codeTools.GetCodeElements(editLine, text);
+                List<CodeTextLine> textLines = codeTools.GetFilteredLines(
+                    codeTextelements, settings);
 
                 bool isComment = false;
 

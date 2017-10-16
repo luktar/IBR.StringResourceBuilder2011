@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\DataGridGotFocusBehavior.cs" />
     <Compile Include="Behaviors\MouseWheelBehavior.cs" />
+    <Compile Include="Interfaces\ICodeTools.cs" />
     <Compile Include="Interfaces\IDocumentsManager.cs" />
     <Compile Include="Interfaces\IResourcesManager.cs" />
     <Compile Include="Interfaces\ISettingsHelper.cs" />
@@ -130,6 +131,10 @@
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
     <Content Include="Resources\MainWindowCommand.png" />
+    <Content Include="Settings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\StartMenuItem.png" />
     <Content Include="Resources\StartMenuItemPackage.ico" />
     <Content Include="stylesheet.css" />

@@ -7,6 +7,8 @@ namespace ResxFinder.Interfaces
         string GlobalResourceFileName { get; set; }
         List<string> IgnoreMethods { get; set; }
         List<string> IgnoreMethodsArguments { get; set; }
+
+        List<string> IgnoreRegex { get; set; }
         int IgnoreStringLength { get; set; }
         List<string> IgnoreStrings { get; set; }
         List<string> IgnoreSubStrings { get; set; }
@@ -23,5 +25,8 @@ namespace ResxFinder.Interfaces
         bool IgnoreMethodArguments(string name);
 
         bool IgnoreString(string text);
+        void Initialize();
+
+        bool TextMatch(string text);
     }
 }

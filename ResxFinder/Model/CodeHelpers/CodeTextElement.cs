@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ResxFinder.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,11 @@ namespace ResxFinder.Model.CodeHelpers
             foreach (string text in texts)
                 if (Text.Contains(text)) return true;
             return false;
+        }
+
+        public bool IsMatching(ISettings settings)
+        {
+            return settings.TextMatch(Text);
         }
 
         public bool ContainsText(string text)

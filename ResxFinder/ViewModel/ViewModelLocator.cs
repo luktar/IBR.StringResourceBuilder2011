@@ -7,6 +7,7 @@ using ResxFinder.Model.SolutionAnalyzer;
 using ResxFinder.Interfaces;
 using System;
 using System.Configuration;
+using ResxFinder.Model.CodeHelpers;
 
 namespace ResxFinder.ViewModel
 {
@@ -43,6 +44,7 @@ namespace ResxFinder.ViewModel
                 SimpleIoc.Default.Register<ISolutionProjectsHelper, SolutionProjectsHelper>();
                 SimpleIoc.Default.Register<IParserManager, ParserManager>();
                 SimpleIoc.Default.Register<IDocumentsManager, DocumentsManager>();
+                SimpleIoc.Default.Register<ICodeTools, CodeTools>();
             }
 
             SimpleIoc.Default.Register<MainWindowControlViewModel>();

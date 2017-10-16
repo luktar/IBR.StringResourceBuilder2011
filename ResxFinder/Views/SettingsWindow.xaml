@@ -14,126 +14,136 @@
         d:DesignWidth="650"
         d:DesignHeight="376"
         SizeToContent="WidthAndHeight">
-  <Window.Resources>
-    <!--Image-->
-    <Style TargetType="Image">
-      <Setter Property="core:ImageGreyer.IsGreyable" Value="True"/>
-    </Style>
-    <Style TargetType="{x:Type customControls:NumericUpDown}">
-      <Setter Property="HorizontalAlignment" Value="Center"/>
-      <Setter Property="VerticalAlignment" Value="Center"/>
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="{x:Type customControls:NumericUpDown}">
-            <Grid Margin="2">
-              <Grid.RowDefinitions>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="1"/>
-                <RowDefinition Height="10"/>
-              </Grid.RowDefinitions>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="17"/>
-              </Grid.ColumnDefinitions>
+    <Window.Resources>
+        <!--Image-->
+        <Style TargetType="Image">
+            <Setter Property="core:ImageGreyer.IsGreyable" Value="True"/>
+        </Style>
+        <Style TargetType="{x:Type customControls:NumericUpDown}">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type customControls:NumericUpDown}">
+                        <Grid Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="10"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="17"/>
+                            </Grid.ColumnDefinitions>
 
-              <TextBox Grid.RowSpan="3" Margin="0" TextAlignment="Right"
+                            <TextBox Grid.RowSpan="3" Margin="0" TextAlignment="Right"
                        Text="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}, Path=Value}" />
-              <RepeatButton Grid.Column="1" Grid.Row="0" Command="{x:Static customControls:NumericUpDown.IncreaseCommand}">
-                <Polygon Fill="Black" Points="0,4 3,1 6,4"/>
-              </RepeatButton>
+                            <RepeatButton Grid.Column="1" Grid.Row="0" Command="{x:Static customControls:NumericUpDown.IncreaseCommand}">
+                                <Polygon Fill="Black" Points="0,4 3,1 6,4"/>
+                            </RepeatButton>
                             <RepeatButton Grid.Column="1" Grid.Row="2" Command="{x:Static customControls:NumericUpDown.DecreaseCommand}">
-                <Polygon Fill="Black" Points="0,1 3,4 6,1"/>
-              </RepeatButton>
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-  </Window.Resources>
-  <Grid UseLayoutRounding="True">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-      <RowDefinition Height="43"/>
-    </Grid.RowDefinitions>
-    <TabControl Grid.Row="0" Margin="8,8,8,0">
-      <TabItem Header="Options" Name="tabiOptions">
-        <Grid>
-          <Grid.RowDefinitions>
+                                <Polygon Fill="Black" Points="0,1 3,4 6,1"/>
+                            </RepeatButton>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid UseLayoutRounding="True">
+        <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
-          <GroupBox Grid.Row="0" Margin="2" Header="Ignore Options">
-            <StackPanel Margin="2,8,2,2">
-              <CheckBox Margin="0,-5,0,4" Name="cbIgnoreUpToNCharactersStrings">
-                <StackPanel Orientation="Horizontal">
-                  <TextBlock VerticalAlignment="Center" Text="Ignore strings with " />
+            <RowDefinition Height="43"/>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0" Margin="8,8,8,0">
+            <TabItem Header="Options" Name="tabiOptions">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Margin="2" Header="Ignore Options">
+                        <StackPanel Margin="2,8,2,2">
+                            <CheckBox Margin="0,-5,0,4" Name="cbIgnoreUpToNCharactersStrings">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="Ignore strings with " />
                                     <customControls:NumericUpDown MinValue="2" Value="2" Width="50" x:Name="nudIgnoreStringLength"
                                     IsEnabled="{Binding ElementName=cbIgnoreUpToNCharactersStrings, Path=IsChecked}" />
-                  <TextBlock VerticalAlignment="Center" Text=" characters or less" />
-                </StackPanel>
-              </CheckBox>
-              <CheckBox Margin="0,0,0,8" Name="cbIgnoreWhiteSpaceStrings" Content="Ignore white space strings (entirely blanks and/or tabs)" />
-              <CheckBox Margin="0,0,0,8" Name="cbIgnoreNumberStrings" Content="Ignore number strings (&quot;1234&quot;, &quot;12.34&quot;, &quot;  1234&quot;, &quot;1234  &quot; but not &quot;123  4&quot;, &quot;12,34&quot;)"></CheckBox>
-              <CheckBox Margin="0,0,0,8" Name="cbIgnoreVerbatimStrings" Content="Ignore verbatim strings (preceded by '@' character as in @&quot;my string&quot;)"></CheckBox>
-            </StackPanel>
-          </GroupBox>
-          <GroupBox Grid.Row="1" Margin="2" Header="Other Options">
-            <StackPanel Margin="2,8,2,2">
-              <CheckBox Margin="0,-5,0,4" Name="cbUseGlobalResourceFile">
-                <StackPanel Orientation="Horizontal">
-                  <TextBlock VerticalAlignment="Center" Text="Use global resource file" />
-                  <TextBox MinWidth="20" Margin="4,2,0,2" VerticalAlignment="Center" Name="txtGlobalResourceFileName"
+                                    <TextBlock VerticalAlignment="Center" Text=" characters or less" />
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="0,0,0,8" Name="cbIgnoreWhiteSpaceStrings" Content="Ignore white space strings (entirely blanks and/or tabs)" />
+                            <CheckBox Margin="0,0,0,8" Name="cbIgnoreNumberStrings" Content="Ignore number strings (&quot;1234&quot;, &quot;12.34&quot;, &quot;  1234&quot;, &quot;1234  &quot; but not &quot;123  4&quot;, &quot;12,34&quot;)"></CheckBox>
+                            <CheckBox Margin="0,0,0,8" Name="cbIgnoreVerbatimStrings" Content="Ignore verbatim strings (preceded by '@' character as in @&quot;my string&quot;)"></CheckBox>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Margin="2" Header="Other Options">
+                        <StackPanel Margin="2,8,2,2">
+                            <CheckBox Margin="0,-5,0,4" Name="cbUseGlobalResourceFile">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="Use global resource file" />
+                                    <TextBox MinWidth="20" Margin="4,2,0,2" VerticalAlignment="Center" Name="txtGlobalResourceFileName"
                            IsEnabled="{Binding ElementName=cbUseGlobalResourceFile, Path=IsChecked}" FontFamily="Consolas, Courier New" />
-                  <TextBlock VerticalAlignment="Center" Text=".Resources.resx" FontFamily="Consolas, Courier New" Margin="0,1,0,0" />
-                  <TextBlock VerticalAlignment="Center" Text=" (leave blank for the standard global resource file)" />
-                </StackPanel>
-              </CheckBox>
-              <CheckBox Margin="20,0,0,8" Name="cbDontUseResourceAlias" IsEnabled="{Binding ElementName=cbUseGlobalResourceFile, Path=IsChecked}">
+                                    <TextBlock VerticalAlignment="Center" Text=".Resources.resx" FontFamily="Consolas, Courier New" Margin="0,1,0,0" />
+                                    <TextBlock VerticalAlignment="Center" Text=" (leave blank for the standard global resource file)" />
+                                </StackPanel>
+                            </CheckBox>
+                            <CheckBox Margin="20,0,0,8" Name="cbDontUseResourceAlias" IsEnabled="{Binding ElementName=cbUseGlobalResourceFile, Path=IsChecked}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="Don't use resource alias like  " />
+                                    <TextBlock VerticalAlignment="Center" Text="using SRB_Strings_Res = ...;" FontFamily="Consolas, Courier New" Margin="0,1,0,0" />
+                                    <TextBlock VerticalAlignment="Center" Text="  or  " />
+                                    <TextBlock VerticalAlignment="Center" Text="using GlblRes = ...;" FontFamily="Consolas, Courier New" Margin="0,1,0,0" />
+                                </StackPanel>
+                            </CheckBox>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Strings">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <views:ListEditor Grid.Column="0" x:Name="lstIgnoreStrings" Header="Ignore these Strings" />
+                    <views:ListEditor Grid.Column="1" x:Name="lstIgnoreSubStrings" Header="Ignore Strings containing these Strings" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Methods &amp; Functions">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <views:ListEditor Grid.Column="0" x:Name="lstIgnoreMethods" Header="Ignore these Methods or Functions" />
+                    <views:ListEditor Grid.Column="1" x:Name="lstIgnoreArguments" Header="Ignore Arguments of these Methods or Functions" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Regex ignore">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <views:ListEditor Grid.Column="0" x:Name="regexIgnore" Header="Ignore these regex in code block" />
+                    <StackPanel Grid.Column="1" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,8,0">
+            <Button Height="27" Margin="0,8,8,8" Name="btnOK" VerticalAlignment="Center" Width="89" Click="btnOK_Click" ToolTip="Accept all changes made">
                 <StackPanel Orientation="Horizontal">
-                  <TextBlock VerticalAlignment="Center" Text="Don't use resource alias like  " />
-                  <TextBlock VerticalAlignment="Center" Text="using SRB_Strings_Res = ...;" FontFamily="Consolas, Courier New" Margin="0,1,0,0" />
-                  <TextBlock VerticalAlignment="Center" Text="  or  " />
-                  <TextBlock VerticalAlignment="Center" Text="using GlblRes = ...;" FontFamily="Consolas, Courier New" Margin="0,1,0,0" />
+                    <Image Height="16" Width="16" Source="/IBR.StringResourceBuilder2011;component/Images/bt_apply_shadow.png" Stretch="None" />
+                    <TextBlock Text="OK" Margin="4,0,0,0"/>
                 </StackPanel>
-              </CheckBox>
-            </StackPanel>
-          </GroupBox>
-        </Grid>
-      </TabItem>
-      <TabItem Header="Strings">
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          <views:ListEditor Grid.Column="0" x:Name="lstIgnoreStrings" Header="Ignore these Strings" />
-          <views:ListEditor Grid.Column="1" x:Name="lstIgnoreSubStrings" Header="Ignore Strings containing these Strings" />
-        </Grid>
-      </TabItem>
-      <TabItem Header="Methods &amp; Functions">
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
-          <views:ListEditor Grid.Column="0" x:Name="lstIgnoreMethods" Header="Ignore these Methods or Functions" />
-          <views:ListEditor Grid.Column="1" x:Name="lstIgnoreArguments" Header="Ignore Arguments of these Methods or Functions" />
-        </Grid>
-      </TabItem>
-    </TabControl>
-    <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,8,0">
-      <Button Height="27" Margin="0,8,8,8" Name="btnOK" VerticalAlignment="Center" Width="89" Click="btnOK_Click" ToolTip="Accept all changes made">
-        <StackPanel Orientation="Horizontal">
-          <Image Height="16" Width="16" Source="/IBR.StringResourceBuilder2011;component/Images/bt_apply_shadow.png" Stretch="None" />
-          <TextBlock Text="OK" Margin="4,0,0,0"/>
+            </Button>
+            <Button Height="27" Margin="0,8,8,8" Name="btnCancel" VerticalAlignment="Center" Width="89" Click="btnCancel_Click" ToolTip="Cancel all changes made">
+                <StackPanel Orientation="Horizontal">
+                    <Image Height="16" Width="16" Source="/IBR.StringResourceBuilder2011;component/Images/bt_del_shadow.png" Stretch="None" />
+                    <TextBlock Text="Cancel" Margin="4,0,0,0"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
-      </Button>
-      <Button Height="27" Margin="0,8,8,8" Name="btnCancel" VerticalAlignment="Center" Width="89" Click="btnCancel_Click" ToolTip="Cancel all changes made">
-        <StackPanel Orientation="Horizontal">
-          <Image Height="16" Width="16" Source="/IBR.StringResourceBuilder2011;component/Images/bt_del_shadow.png" Stretch="None" />
-          <TextBlock Text="Cancel" Margin="4,0,0,0"/>
-        </StackPanel>
-      </Button>
-    </StackPanel>
-  </Grid>
+    </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ResxFinder.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,22 +9,26 @@ using System.Threading.Tasks;
 
 namespace ResxFinder.Model.CodeHelpers
 {
-    public class CodeTools
+    public class CodeTools : ICodeTools
     {
         private const string END_LINE_PATTERN = "(\\s*;\\s*(\\/\\/.*)*)$";
+        private const string END_ATTRIBUTE_PATTERN = "(]\\s*)$";
 
-        private static Regex EndLineRegex { get; } =
+        private Regex EndLineRegex { get; } =
             new Regex(END_LINE_PATTERN);
 
-        public static List<CodeTextLine> GetFilteredLines(
+        private Regex EndAttributeRegex { get; } =
+            new Regex(END_ATTRIBUTE_PATTERN);
+
+        public List<CodeTextLine> GetFilteredLines(
             List<CodeTextElement> codeTextElements,
-            List<string> ignoreFilters)
+            ISettings settings)
         {
             List<CodeTextLine> result = new List<CodeTextLine>();
 
             foreach(CodeTextElement element in codeTextElements)
             {
-                if (!element.ContainsText(ignoreFilters))
+                if (!element.IsMatching(settings))
                     result.AddRange(element.Lines);
             }
 
@@ -35,7 +40,7 @@ namespace ResxFinder.Model.CodeHelpers
         /// </summary>
         /// <param name="text"></param>
         /// <returns>Dictionary where key is starting line number, value is code block text.</returns>
-        public static List<CodeTextElement> GetCodeElements(int startingLine, string text)
+        public List<CodeTextElement> GetCodeElements(int startingLine, string text)
         {
             List<CodeTextElement> result = new List<CodeTextElement>();
 
@@ -75,9 +80,11 @@ namespace ResxFinder.Model.CodeHelpers
             return result;
         }
 
-        private static bool IsLineBlockEnd(string codeLine)
+        private bool IsLineBlockEnd(string codeLine)
         {
-            return EndLineRegex.Match(codeLine).Success;
+            return 
+                EndLineRegex.Match(codeLine).Success ||
+                EndAttributeRegex.Match(codeLine).Success;
         }
     }
 }

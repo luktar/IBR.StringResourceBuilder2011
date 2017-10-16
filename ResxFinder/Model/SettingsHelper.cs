@@ -32,6 +32,7 @@ namespace ResxFinder.Model
         {
             if (isPathReadOnly || settings == null || isFileReadOnly) return;
             System.IO.File.WriteAllText(fileName, settings.Serialize(), Encoding.UTF8);
+            settings.Initialize();
         }
 
         private ISettings GetSettings()
@@ -49,7 +50,9 @@ namespace ResxFinder.Model
             if (System.IO.File.Exists(fileName))
             {
                 string xml = System.IO.File.ReadAllText(fileName, Encoding.UTF8);
-                return Model.Settings.DeSerialize(xml);
+                ISettings settings = Model.Settings.DeSerialize(xml);
+                settings.Initialize();
+                return settings;
             }
             return new Settings();
         }
