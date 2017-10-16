@@ -16,7 +16,7 @@
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" HorizontalAlignment="Stretch"
 >
                 <CheckBox Command="{Binding IsCheckedCommand}" Margin="5 0 5 0" VerticalAlignment="Center" DockPanel.Dock="Left" IsChecked="{Binding IsChecked}"/>
-                <Button Content="Parse solution" Command="{Binding RunCommand}"/>
+                <Button Content="Find hard coded strings" Command="{Binding RunCommand}"/>
                 <Button Content="Move to resources" Command="{Binding MoveToResourcesCommand}"/>
                 <Button Content="Properties" Command="{Binding PropertiesCommand}"/>
                 
