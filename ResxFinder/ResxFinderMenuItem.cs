@@ -12,7 +12,7 @@ namespace ResxFinder
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class StartMenuItem
+    internal sealed class ResxFinderMenuItem
     {
         /// <summary>
         /// Command ID.
@@ -30,11 +30,11 @@ namespace ResxFinder
         private readonly Package package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StartMenuItem"/> class.
+        /// Initializes a new instance of the <see cref="ResxFinderMenuItem"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private StartMenuItem(Package package)
+        private ResxFinderMenuItem(Package package)
         {
             if (package == null)
             {
@@ -55,7 +55,7 @@ namespace ResxFinder
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static StartMenuItem Instance
+        public static ResxFinderMenuItem Instance
         {
             get;
             private set;
@@ -78,7 +78,7 @@ namespace ResxFinder
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new StartMenuItem(package);
+            Instance = new ResxFinderMenuItem(package);
         }
 
         /// <summary>
@@ -90,38 +90,16 @@ namespace ResxFinder
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            DTE2 dte = (DTE2)ServiceProvider.GetService(typeof(DTE));
-            AnalyzeSolution(dte);
-        }
-
-        private void AnalyzeSolution(DTE2 dte)
-        {
-            Solution solution = null;
-            try
+            MainWindow window = (MainWindow)this.package.FindToolWindow(typeof(MainWindow), 0, true);
+            if ((null == window) || (null == window.Frame))
             {
-                solution = dte.Solution;
-
-                List<string> names = new List<string>();
-
-                foreach (Project project in solution.Projects)
-                {
-
-
-                    if (project.Kind == "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}")
-                        Console.WriteLine("Solution folder: " + project.Name);
-                    else
-                    {
-                        foreach (ProjectItem projectItem in project.ProjectItems)
-                        {
-
-                        }
-                    }
-                }
+                throw new NotSupportedException("Cannot create tool window");
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("An error occurred while analyzing solution." + Environment.NewLine + e);
-            }
+
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+
+
         }
     }
 }

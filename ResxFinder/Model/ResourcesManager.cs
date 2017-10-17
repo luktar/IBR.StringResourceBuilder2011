@@ -17,7 +17,7 @@ namespace ResxFinder.Model
     {
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
 
-        private DTE2 Dte { get; set; } = StartMenuItemPackage.ApplicationObject;
+        private DTE2 Dte { get; set; } = ResxFinderPackage.ApplicationObject;
 
         private ISettings Settings { get; set; }
 

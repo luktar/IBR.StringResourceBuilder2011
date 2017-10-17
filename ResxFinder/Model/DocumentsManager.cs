@@ -18,7 +18,7 @@ namespace ResxFinder.Model
         {
             try
             {
-                DTE2 dte = StartMenuItemPackage.ApplicationObject;
+                DTE2 dte = ResxFinderPackage.ApplicationObject;
                 dte.MainWindow.Activate();
 
                 return dte.ItemOperations.OpenFile(fileName, EnvDTE.Constants.vsViewKindTextView);

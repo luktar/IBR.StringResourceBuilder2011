@@ -12,7 +12,7 @@ namespace ResxFinder.Model.SolutionAnalyzer
     {
         public Solution GetSolution()
         {
-            return StartMenuItemPackage.ApplicationObject.Solution;
+            return ResxFinderPackage.ApplicationObject.Solution;
         }
     }
 }

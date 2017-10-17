@@ -37,10 +37,10 @@ namespace ResxFinder
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [Guid(StartMenuItemPackage.PackageGuidString)]
+    [Guid(ResxFinderPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideToolWindow(typeof(MainWindow))]
-    public sealed class StartMenuItemPackage : Package
+    public sealed class ResxFinderPackage : Package
     {
         public static DTE2 ApplicationObject { get; private set; }
 
@@ -50,9 +50,9 @@ namespace ResxFinder
         public const string PackageGuidString = "0fae8e85-b18c-47a9-a287-bdc91308f01f";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StartMenuItem"/> class.
+        /// Initializes a new instance of the <see cref="ResxFinderMenuItem"/> class.
         /// </summary>
-        public StartMenuItemPackage()
+        public ResxFinderPackage()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
@@ -73,7 +73,7 @@ namespace ResxFinder
             ApplicationObject = GetService(typeof(DTE)) as DTE2;
 
 
-            StartMenuItem.Initialize(this);
+            ResxFinderMenuItem.Initialize(this);
             base.Initialize();
             MainWindowCommand.Initialize(this);
         }
