@@ -3,6 +3,7 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using EnvDTE80;
 
 namespace ResxFinder
 {
@@ -24,7 +25,7 @@ namespace ResxFinder
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+       public readonly Package Package;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowCommand"/> class.
@@ -38,7 +39,7 @@ namespace ResxFinder
                 throw new ArgumentNullException("package");
             }
 
-            this.package = package;
+            this.Package = package;
 
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
@@ -47,6 +48,12 @@ namespace ResxFinder
                 var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
                 commandService.AddCommand(menuItem);
             }
+        }
+
+        public DTE2 GetDte2()
+        {
+            ResxFinderPackage package = Package as ResxFinderPackage;
+            return package.GetDte;
         }
 
         /// <summary>
@@ -65,7 +72,7 @@ namespace ResxFinder
         {
             get
             {
-                return this.package;
+                return this.Package;
             }
         }
 
@@ -88,7 +95,7 @@ namespace ResxFinder
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.package.FindToolWindow(typeof(MainWindow), 0, true);
+            ToolWindowPane window = this.Package.FindToolWindow(typeof(MainWindow), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException("Cannot create tool window");

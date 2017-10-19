@@ -1,21 +1,25 @@
 ﻿using EnvDTE;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using NLog;
-using ResxFinder.Model;
 using ResxFinder.Interfaces;
+using ResxFinder.Messages;
+using ResxFinder.Model;
 using ResxFinder.Views;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System;
 using System.Linq;
-using GalaSoft.MvvmLight.Messaging;
-using ResxFinder.Messages;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace ResxFinder.ViewModel
 {
     public class MainWindowControlViewModel : ViewModelBase
     {
+        private string message;
+
         private bool? isChecked;
 
         private static Logger logger = NLogManager.Instance.GetCurrentClassLogger();
@@ -41,6 +45,16 @@ namespace ResxFinder.ViewModel
         public ObservableCollection<ParserViewModel> Parsers { get; set; } =
             new ObservableCollection<ParserViewModel>();
 
+        public string Message
+        {
+            get { return message; }
+            set
+            {
+                message = value;
+                RaisePropertyChanged(nameof(Message));
+            }
+        }
+
         private IDocumentsManager DocumentsManager { get; set; }
 
         public MainWindowControlViewModel()
@@ -48,7 +62,7 @@ namespace ResxFinder.ViewModel
             IsChecked = false;
 
             PropertiesCommand = new RelayCommand(PropertiesPressed);
-            RunCommand = new RelayCommand(RunPressed);
+            RunCommand = new RelayCommand(RunPressed, CanRunCommand);
             MoveToResourcesCommand = new RelayCommand(MoveToResourcesPressed, CanMoveToResources);
             IsCheckedCommand = new RelayCommand(IsCheckedPressed, IsCheckedEnabled);
 
@@ -56,6 +70,47 @@ namespace ResxFinder.ViewModel
 
             Messenger.Default.Register<UpdateTopCheckboxesMessage>(this, UpdateCheckboxes);
             Messenger.Default.Register<UpdateParsersMessage>(this, UpdateParsers);
+            Messenger.Default.Register<UpdateProgressMessage>(this, UpdateProgress);
+
+            ResxFinderPackage.ApplicationObject.Events.SolutionEvents.Opened += SolutionEvents_Opened;
+            ResxFinderPackage.ApplicationObject.Events.SolutionEvents.AfterClosing += SolutionEvents_Closed;
+
+            if (!ResxFinderPackage.ApplicationObject.Solution.IsOpen)
+            {
+                SolutionClosedMessage();
+            }
+        }
+        private void SolutionEvents_Closed()
+        {
+            IsChecked = false;
+            Parsers.Clear();
+
+            SolutionClosedMessage();
+
+            RunCommand.RaiseCanExecuteChanged();
+            MoveToResourcesCommand.RaiseCanExecuteChanged();
+            IsCheckedCommand.RaiseCanExecuteChanged();
+        }
+        private bool CanRunCommand()
+        {
+            return ResxFinderPackage.ApplicationObject.Solution.IsOpen;
+        }
+
+        private void SolutionClosedMessage()
+        {
+            Message = "No solution loaded.";
+        }
+
+        private void SolutionEvents_Opened()
+        {
+            IsChecked = false;
+            Parsers.Clear();
+
+            Message = "Solution active. Press \"Find hard coded strings\" button.";
+
+            RunCommand.RaiseCanExecuteChanged();
+            MoveToResourcesCommand.RaiseCanExecuteChanged();
+            IsCheckedCommand.RaiseCanExecuteChanged();
         }
 
         #region Checkbox selection
@@ -77,7 +132,8 @@ namespace ResxFinder.ViewModel
             {
                 IsChecked = GetSelectionState();
 
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Warn(e, $"Problem with selection parsers from top level.");
             }
@@ -93,7 +149,8 @@ namespace ResxFinder.ViewModel
 
         private void UpdateChildsSelection(bool value)
         {
-            Parsers.ToList().ForEach(x => {
+            Parsers.ToList().ForEach(x =>
+            {
                 x.IsChecked = value;
                 x.UpdateChildsSelection(value);
             });
@@ -117,7 +174,7 @@ namespace ResxFinder.ViewModel
             {
                 ISettings settings = ViewModelLocator.Instance.GetInstance<ISettingsHelper>().Settings;
 
-                foreach(ParserViewModel parser in Parsers.ToList())
+                foreach (ParserViewModel parser in Parsers.ToList())
                 {
                     if (parser.IsChecked == false) continue;
 
@@ -138,27 +195,31 @@ namespace ResxFinder.ViewModel
                             try
                             {
                                 resourceManager.WriteToResource(y.StringResource);
-                            } catch(Exception e)
+                            }
+                            catch (Exception e)
                             {
                                 logger.Warn(e, $"Problem with writing string to resource. Resource details: {currentStringResource}.");
                             }
                         }
-                        
+
                     });
 
                     resourceManager.InsertNamespace();
 
                 };
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 if (currentStringResource == null) currentStringResource = "Unknown";
-                logger.Error(e, 
+                logger.Error(e,
                     $"Unable to move hard coded strings to resource file. Project file name: {projectFileName}, resource: {currentStringResource}");
             }
         }
 
         private void RunPressed()
         {
+            Message = "Search started.";
+
             string currentParserName = string.Empty;
             try
             {
@@ -175,18 +236,33 @@ namespace ResxFinder.ViewModel
                 List<IParser> parsers = parserManager.GetParsers(projects);
 
                 Parsers.Clear();
-                parsers.ForEach(x => {
+                parsers.ForEach(x =>
+                {
                     currentParserName = x.FileName;
                     Parsers.Add(new ParserViewModel(x, DocumentsManager));
                 });
 
                 UpdateSelection();
                 MoveToResourcesCommand.RaiseCanExecuteChanged();
-            } catch (Exception e)
+
+                Message = "Search completed.";
+            }
+            catch (Exception e)
             {
-                logger.Error(e, 
+                logger.Error(e,
                     $"An error occurred while parsing all projects in solution. File name: {currentParserName}.");
             }
+        }
+
+        public void UpdateProgress(UpdateProgressMessage message)
+        {
+            // TODO: Fix refreshing data.
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Message = "Loading: " + message.Current + " / " + message.Total;
+            }, DispatcherPriority.Send);
+
+
         }
 
         private void UpdateSelection()
@@ -212,8 +288,8 @@ namespace ResxFinder.ViewModel
             {
                 settings.Save();
             }
-        } 
-        
+        }
+
         private void UpdateParsers(UpdateParsersMessage parserMessage)
         {
             List<ParserViewModel> parsersToRemove = Parsers.Where(x => x.StringResources.Count == 0).ToList();

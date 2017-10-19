@@ -63,6 +63,7 @@
     <Compile Include="Interfaces\ISettingsHelper.cs" />
     <Compile Include="Messages\UpdateParserCheckBoxesMessage.cs" />
     <Compile Include="Messages\UpdateParsersMessage.cs" />
+    <Compile Include="Messages\UpdateProgressMessage.cs" />
     <Compile Include="Messages\UpdateTopCheckboxesMessage.cs" />
     <Compile Include="Model\CodeHelpers\CodeTextElement.cs" />
     <Compile Include="Model\CodeHelpers\CodeTextLine.cs" />

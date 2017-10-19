@@ -19,13 +19,14 @@
                 <Button Content="Find hard coded strings" Command="{Binding RunCommand}"/>
                 <Button Content="Move to resources" Command="{Binding MoveToResourcesCommand}"/>
                 <Button Content="Properties" Command="{Binding PropertiesCommand}"/>
-                
+                <TextBlock DockPanel.Dock="Top" Foreground="Black" VerticalAlignment="Center"
+                       Text="{Binding Message}" />
             </StackPanel>
-            <ScrollViewer>
+            <ScrollViewer DockPanel.Dock="Top" >
                 <i:Interaction.Behaviors>
                     <behaviors:MouseWheelBehavior/>
                 </i:Interaction.Behaviors>
-                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Parsers}">
+                <ItemsControl ItemsSource="{Binding Parsers}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <views:ParserView/>

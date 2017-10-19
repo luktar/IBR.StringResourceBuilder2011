@@ -42,7 +42,14 @@ namespace ResxFinder
     [ProvideToolWindow(typeof(MainWindow))]
     public sealed class ResxFinderPackage : Package
     {
+        private static ResxFinderPackage instance;
+
         public static DTE2 ApplicationObject { get; private set; }
+
+        public DTE2 GetDte
+        {
+            get { return GetService(typeof(DTE)) as DTE2; }
+        }
 
         /// <summary>
         /// StartMenuItemPackage GUID string.
@@ -54,6 +61,7 @@ namespace ResxFinder
         /// </summary>
         public ResxFinderPackage()
         {
+            
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
             // not sited yet inside Visual Studio environment. The place to do all the other
@@ -61,6 +69,10 @@ namespace ResxFinder
         }
 
         #region Package Members
+        /// <summary>
+        /// https://stackoverflow.com/questions/3874015/subscription-to-dte-events-doesnt-seem-to-work-events-dont-get-called
+        /// </summary>
+        private static SolutionEvents solutionEvents;
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -68,10 +80,10 @@ namespace ResxFinder
         /// </summary>
         protected override void Initialize()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-
             ApplicationObject = GetService(typeof(DTE)) as DTE2;
+            solutionEvents = ApplicationObject.Events.SolutionEvents;
 
+            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
             ResxFinderMenuItem.Initialize(this);
             base.Initialize();

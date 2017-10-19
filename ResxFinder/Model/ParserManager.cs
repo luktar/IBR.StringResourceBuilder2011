@@ -1,7 +1,9 @@
 ﻿using EnvDTE;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.VisualStudio;
 using NLog;
 using ResxFinder.Interfaces;
+using ResxFinder.Messages;
 using ResxFinder.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,14 @@ namespace ResxFinder.Model
 
         public List<IParser> Parsers { get; private set; } = new List<IParser>();
 
+        private int Total { get; set; }
+        private int Current { get; set; }
+
         public List<IParser> GetParsers(List<Project> projects)
         {
+            Total = projects.Count;
+            Current = 1;
+
             string currentProjectName = string.Empty;
             try
             {
@@ -26,6 +34,8 @@ namespace ResxFinder.Model
 
                 foreach(Project project in projects)
                 {
+                    Messenger.Default.Send(new UpdateProgressMessage(Total, Current));
+
                     currentProjectName = project.Name;
                     try
                     {
@@ -34,6 +44,8 @@ namespace ResxFinder.Model
                     {
                         logger.Warn(e, $"An error occurred while analyzing project: " + currentProjectName);
                     }
+
+                    Current++;
                 }
 
                 return Parsers;
