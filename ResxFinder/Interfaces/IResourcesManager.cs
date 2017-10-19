@@ -12,6 +12,6 @@ namespace ResxFinder.Interfaces
     {
         void WriteToResource(StringResource stringResource);
 
-        void InsertNamespace();
+        void Finish();
     }
 }

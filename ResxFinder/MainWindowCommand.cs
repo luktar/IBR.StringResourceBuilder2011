@@ -50,12 +50,6 @@ namespace ResxFinder
             }
         }
 
-        public DTE2 GetDte2()
-        {
-            ResxFinderPackage package = Package as ResxFinderPackage;
-            return package.GetDte;
-        }
-
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>

@@ -17,7 +17,7 @@ namespace ResxFinderTests
             string variable3 = ""Neque porro quisquam est qui dolorem ipsum "" +
                 ""quia dolor sit amet, consectetur, adipisci velit...""; ";
 
-            List<CodeTextElement> codeElements = CodeTools.GetCodeElements(10, input);
+            // List<CodeTextElement> codeElements = CodeTools.GetCodeElements(10, input);
         }
     }
 }

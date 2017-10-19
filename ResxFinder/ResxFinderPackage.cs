@@ -46,11 +46,6 @@ namespace ResxFinder
 
         public static DTE2 ApplicationObject { get; private set; }
 
-        public DTE2 GetDte
-        {
-            get { return GetService(typeof(DTE)) as DTE2; }
-        }
-
         /// <summary>
         /// StartMenuItemPackage GUID string.
         /// </summary>

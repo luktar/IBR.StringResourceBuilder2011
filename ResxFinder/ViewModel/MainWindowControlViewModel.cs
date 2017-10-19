@@ -165,6 +165,7 @@ namespace ResxFinder.ViewModel
 
         private void MoveToResourcesPressed()
         {
+            Message = "Moving hard coded string to resources.";
             logger.Debug("Moving hard coded strings to resource file.");
 
             string projectFileName = string.Empty;
@@ -204,9 +205,10 @@ namespace ResxFinder.ViewModel
 
                     });
 
-                    resourceManager.InsertNamespace();
+                    resourceManager.Finish();
 
                 };
+                Message = "Operation completed successfully.";
             }
             catch (Exception e)
             {

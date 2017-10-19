@@ -13,6 +13,10 @@ namespace ResxFinder.Model.CodeHelpers
     {
         private const string END_LINE_PATTERN = "(\\s*;\\s*(\\/\\/.*)*)$";
         private const string END_ATTRIBUTE_PATTERN = "(]\\s*)$";
+        private const string SWITCH_CASE_SEPARATOR = @"^(\s*case) .*(:\s*)$";
+
+        private Regex SwitchCaseRegex { get; } =
+            new Regex(SWITCH_CASE_SEPARATOR);
 
         private Regex EndLineRegex { get; } =
             new Regex(END_LINE_PATTERN);
@@ -84,7 +88,8 @@ namespace ResxFinder.Model.CodeHelpers
         {
             return 
                 EndLineRegex.Match(codeLine).Success ||
-                EndAttributeRegex.Match(codeLine).Success;
+                EndAttributeRegex.Match(codeLine).Success ||
+                SwitchCaseRegex.Match(codeLine).Success;
         }
     }
 }

@@ -14,6 +14,8 @@
     <string>AssemblyInfo</string>
     <string>GlobalSuppressions</string>
     <string>Designer.cs</string>
+    <string>Test</string>
+    <string>Mock</string>
   </IgnoredFiles>
   <IgnoredProjects>
     <string>Test</string>

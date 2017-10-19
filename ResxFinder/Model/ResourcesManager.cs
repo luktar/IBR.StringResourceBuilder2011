@@ -138,19 +138,12 @@ namespace ResxFinder.Model
                 if (System.IO.File.Exists(resourceFile) || System.IO.File.Exists(designerFile))
                 {
                     string msg = string.Format(
-                        "The resource file already exists though it is not included in the project:\r\n\r\n" +
-                        "'{0}'\r\n\r\n" +
-                        "Do you want to overwrite the existing resource file?",
+                        "The resource file already exists though it is not included in the project: '{0}'. Overriding file.",
                         resourceFile.Substring(projectPath.Length).TrimStart('\\'));
 
-                    if (MessageBox.Show(msg, "Make resource", MessageBoxButton.YesNo,
-                                        MessageBoxImage.Question) != MessageBoxResult.Yes)
-                        return null;
-                    else
-                    {
-                        TryToSilentlyDeleteIfExistsEvenIfReadOnly(resourceFile);
-                        TryToSilentlyDeleteIfExistsEvenIfReadOnly(designerFile);
-                    }
+                    TryToSilentlyDeleteIfExistsEvenIfReadOnly(resourceFile);
+                    TryToSilentlyDeleteIfExistsEvenIfReadOnly(designerFile);
+
                 }
                 #endregion
 
@@ -264,7 +257,7 @@ namespace ResxFinder.Model
                 if (!AppendStringResource(ResxFileName, ref name, value, comment))
                     return;
 
-                CreateDesignerClass();
+                // CreateDesignerClass();
 
                 if (string.IsNullOrEmpty(TextDocument.Selection.Text)) return;
 
@@ -305,11 +298,14 @@ namespace ResxFinder.Model
             }
         }
 
-        public void InsertNamespace()
+        public void Finish()
         {
             try
             {
+                CreateDesignerClass();
                 CheckAndAddAlias(Namespace, ClassName, AliasName);
+                Window.Document.Save();
+                Window.Close();
             }
             catch (Exception e)
             {
